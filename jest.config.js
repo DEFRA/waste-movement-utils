@@ -14,5 +14,6 @@ export default {
   coverageDirectory: '<rootDir>/coverage',
   transform: {
     '^.+\\.js$': 'babel-jest'
-  }
+  },
+  transformIgnorePatterns: [`node_modules/(?!${['uuid'].join('|')}/)`]
 }
