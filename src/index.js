@@ -17,3 +17,5 @@ export * from './constants/treatment-codes.js'
 export * from './constants/validation-error-categories.js'
 export * from './constants/validation-error-messages.js'
 export * from './constants/validation-warning-messages.js'
+
+export * from './validation-warnings/validation-warnings.js'
