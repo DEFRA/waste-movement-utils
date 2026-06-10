@@ -14,7 +14,10 @@ export const TEST_CONSTANTS = {
 // Factory variant: caller passes their own `createMovementRequest` so services
 // with service-specific payload defaults (e.g. backend's apiCode1) can reuse
 // the same waste-item defaults.
-export const createTestPayloadWith = (createMovementRequest, overrides = {}) => {
+export const createTestPayloadWith = (
+  createMovementRequest,
+  overrides = {}
+) => {
   const { wasteItemOverrides, ...rootOverrides } = overrides
 
   // Build waste item with defaults
