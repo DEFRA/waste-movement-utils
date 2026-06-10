@@ -19,6 +19,7 @@ export * from './constants/validation-error-messages.js'
 export * from './constants/validation-warning-messages.js'
 
 export * from './schemas/hazardous-waste-consignment.js'
+export * from './schemas/receipt.js'
 export * from './schemas/test-constants.js'
 export * from './schemas/test-helpers/waste-test-helpers.js'
 export * from './schemas/waste.js'
