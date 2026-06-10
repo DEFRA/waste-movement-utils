@@ -27,6 +27,7 @@ export * from './schemas/weight.js'
 
 export * from './test/create-test-mongo-db.js'
 export * from './test/data/carrier-registration-numbers.js'
+export * from './test/utils/createMovementRequest.js'
 export * from './test/common/carrier-broker-dealer-regisration-number/carrier-broker-dealer-registration-number-error-tests.js'
 export * from './test/common/pops-and-hazardous-components/pops-and-hazardous-components-error-tests.js'
 export * from './test/common/pops-and-hazardous-components/pops-and-hazardous-components-warning-tests.js'

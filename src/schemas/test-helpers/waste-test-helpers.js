@@ -1,5 +1,6 @@
 // Test Constants
 import { validContainerTypes } from '../../constants/container-types.js'
+import { createMovementRequest as defaultCreateMovementRequest } from '../../test/utils/createMovementRequest.js'
 
 export const TEST_CONSTANTS = {
   VALID_EWC_CODE: '010101',
@@ -10,10 +11,10 @@ export const TEST_CONSTANTS = {
   DEFAULT_IS_ESTIMATE: false
 }
 
-// Single flexible payload helper function
-// `createMovementRequest` is injected so this helper can be reused across
-// services that have different request payload shapes
-export const createTestPayload = (createMovementRequest, overrides = {}) => {
+// Factory variant: caller passes their own `createMovementRequest` so services
+// with service-specific payload defaults (e.g. backend's apiCode1) can reuse
+// the same waste-item defaults.
+export const createTestPayloadWith = (createMovementRequest, overrides = {}) => {
   const { wasteItemOverrides, ...rootOverrides } = overrides
 
   // Build waste item with defaults
@@ -44,3 +45,8 @@ export const createTestPayload = (createMovementRequest, overrides = {}) => {
     ...rootOverrides
   }
 }
+
+// Convenience bound to utils' baseline createMovementRequest — used by the
+// schema tests that live in utils.
+export const createTestPayload = (overrides) =>
+  createTestPayloadWith(defaultCreateMovementRequest, overrides)

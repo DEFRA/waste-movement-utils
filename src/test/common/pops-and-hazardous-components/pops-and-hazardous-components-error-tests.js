@@ -2,7 +2,7 @@ import {
   sourceOfComponentsProvided,
   validSourceOfComponents
 } from '../../../constants/source-of-components.js'
-import { createTestPayload } from '../../../schemas/test-helpers/waste-test-helpers.js'
+import { createTestPayloadWith } from '../../../schemas/test-helpers/waste-test-helpers.js'
 import { formatPopsOrHazardousFields } from '../../../schemas/waste.js'
 
 const DECIMAL_CONCENTRATION = 12.5
@@ -40,7 +40,7 @@ export function popsAndHazardousComponentsErrorTests({
       }
     }
 
-    return createTestPayload(createMovementRequest, {
+    return createTestPayloadWith(createMovementRequest, {
       ...testPayloadOverrides,
       wasteItemOverrides
     })
