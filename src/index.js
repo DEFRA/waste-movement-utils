@@ -33,3 +33,5 @@ export * from './test/common/pops-and-hazardous-components/pops-and-hazardous-co
 export * from './test/common/pops-and-hazardous-components/pops-and-hazardous-components-warning-tests.js'
 
 export * from './validation-warnings/validation-warnings.js'
+
+export * from './helpers/validation-error-formatter.js'
