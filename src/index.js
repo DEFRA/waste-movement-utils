@@ -18,4 +18,18 @@ export * from './constants/validation-error-categories.js'
 export * from './constants/validation-error-messages.js'
 export * from './constants/validation-warning-messages.js'
 
+export * from './schemas/hazardous-waste-consignment.js'
+export * from './schemas/receipt.js'
+export * from './schemas/test-constants.js'
+export * from './schemas/test-helpers/waste-test-helpers.js'
+export * from './schemas/waste.js'
+export * from './schemas/weight.js'
+
+export * from './test/create-test-mongo-db.js'
+export * from './test/data/carrier-registration-numbers.js'
+export * from './test/utils/createMovementRequest.js'
+export * from './test/common/carrier-broker-dealer-regisration-number/carrier-broker-dealer-registration-number-error-tests.js'
+export * from './test/common/pops-and-hazardous-components/pops-and-hazardous-components-error-tests.js'
+export * from './test/common/pops-and-hazardous-components/pops-and-hazardous-components-warning-tests.js'
+
 export * from './validation-warnings/validation-warnings.js'
