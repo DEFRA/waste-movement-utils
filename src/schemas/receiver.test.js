@@ -343,40 +343,18 @@ describe('Receiver Validation', () => {
     })
 
     // Test all valid formats comprehensively (England, Scotland, Wales, Northern Ireland)
-    test.each([
-      TEST_DATA.AUTHORISATION_NUMBERS.VALID.ENGLAND_XX9999XX,
-      TEST_DATA.AUTHORISATION_NUMBERS.VALID.ENGLAND_LOWERCASE,
-      TEST_DATA.AUTHORISATION_NUMBERS.VALID.ENGLAND_WITH_DEPLOYMENT,
-      TEST_DATA.AUTHORISATION_NUMBERS.VALID.ENGLAND_EAWML_6_DIGITS,
-      TEST_DATA.AUTHORISATION_NUMBERS.VALID.ENGLAND_EAWML_5_DIGITS,
-      TEST_DATA.AUTHORISATION_NUMBERS.VALID.ENGLAND_WML_6_DIGITS,
-      TEST_DATA.AUTHORISATION_NUMBERS.VALID.ENGLAND_WML_5_DIGITS,
-      TEST_DATA.AUTHORISATION_NUMBERS.VALID.SCOTLAND_PPC_A,
-      TEST_DATA.AUTHORISATION_NUMBERS.VALID.SCOTLAND_WML_L,
-      TEST_DATA.AUTHORISATION_NUMBERS.VALID.SCOTLAND_WML_L_SUFFIX,
-      TEST_DATA.AUTHORISATION_NUMBERS.VALID.SCOTLAND_WML_W_SUFFIX,
-      TEST_DATA.AUTHORISATION_NUMBERS.VALID.SCOTLAND_WML_N_SUFFIX,
-      TEST_DATA.AUTHORISATION_NUMBERS.VALID.SCOTLAND_WML_E_SUFFIX,
-      TEST_DATA.AUTHORISATION_NUMBERS.VALID.SCOTLAND_SEPA,
-      TEST_DATA.AUTHORISATION_NUMBERS.VALID.SCOTLAND_EAS,
-      TEST_DATA.AUTHORISATION_NUMBERS.VALID.WALES_XX9999XX,
-      TEST_DATA.AUTHORISATION_NUMBERS.VALID.WALES_EPR,
-      TEST_DATA.AUTHORISATION_NUMBERS.VALID.NI_P_FORMAT,
-      TEST_DATA.AUTHORISATION_NUMBERS.VALID.NI_WPPC,
-      TEST_DATA.AUTHORISATION_NUMBERS.VALID.NI_P_WITH_VERSION,
-      TEST_DATA.AUTHORISATION_NUMBERS.VALID.NI_WPPC_WITH_VERSION,
-      TEST_DATA.AUTHORISATION_NUMBERS.VALID.NI_COMBINED,
-      TEST_DATA.AUTHORISATION_NUMBERS.VALID.NI_COMBINED_NO_SUFFIX,
-      TEST_DATA.AUTHORISATION_NUMBERS.VALID.NI_COMBINED_PAC
-    ])('accepts valid format: %s', (format) => {
-      const receiver = {
-        siteName: 'Test Receiver',
-        authorisationNumber: format
-      }
+    test.each(Object.values(TEST_DATA.AUTHORISATION_NUMBERS.VALID))(
+      'accepts valid format: %s',
+      (format) => {
+        const receiver = {
+          siteName: 'Test Receiver',
+          authorisationNumber: format
+        }
 
-      const { error } = validate(receiver, createStandardReceipt())
-      expect(error).toBeUndefined()
-    })
+        const { error } = validate(receiver, createStandardReceipt())
+        expect(error).toBeUndefined()
+      }
+    )
 
     // Test NI standalone formats are rejected (must be combined with WML reference)
     describe.each([
