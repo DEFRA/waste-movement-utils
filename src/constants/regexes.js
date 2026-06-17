@@ -14,7 +14,8 @@ export const IRL_POSTCODE_REGEX =
 const ENGLAND_CARRIER_REGISTRATION_NUMBER_REGEXES = [/^CBD[LU]\d{3,}$/i]
 
 const SEPA_CARRIER_REGISTRATION_NUMBER_REGEXES = [
-  /^((WCR\/R\/\d{7})|((SCO|SEA|SNO|SWE|WCR)\/\d{6}))$/i
+  /^((WCR\/R\/\d{7})|((SCO|SEA|SNO|SWE|WCR)\/\d{6}))$/i,
+  /^PCT-\w-\d{3,7}$/i
 ]
 
 const NRU_CARRIER_REGISTRATION_NUMBER_REGEXES =
