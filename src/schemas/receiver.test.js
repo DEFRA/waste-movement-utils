@@ -175,7 +175,8 @@ describe('Receiver Validation', () => {
   it('rejects invalid UK postcode', () => {
     const receiver = {
       siteName: 'Invalid Postcode Receiver',
-      authorisationNumber: TEST_DATA.AUTHORISATION_NUMBERS.VALID.ENGLAND_EAWML
+      authorisationNumber:
+        TEST_DATA.AUTHORISATION_NUMBERS.VALID.ENGLAND_EAWML_6_DIGITS
     }
 
     const receipt = {
@@ -195,7 +196,8 @@ describe('Receiver Validation', () => {
   it('rejects valid Ireland Eircode', () => {
     const receiver = {
       siteName: 'Invalid Eircode Receiver',
-      authorisationNumber: TEST_DATA.AUTHORISATION_NUMBERS.VALID.ENGLAND_WML
+      authorisationNumber:
+        TEST_DATA.AUTHORISATION_NUMBERS.VALID.ENGLAND_WML_6_DIGITS
     }
 
     const receipt = {
@@ -345,8 +347,8 @@ describe('Receiver Validation', () => {
       TEST_DATA.AUTHORISATION_NUMBERS.VALID.ENGLAND_XX9999XX,
       TEST_DATA.AUTHORISATION_NUMBERS.VALID.ENGLAND_LOWERCASE,
       TEST_DATA.AUTHORISATION_NUMBERS.VALID.ENGLAND_WITH_DEPLOYMENT,
-      TEST_DATA.AUTHORISATION_NUMBERS.VALID.ENGLAND_EAWML,
-      TEST_DATA.AUTHORISATION_NUMBERS.VALID.ENGLAND_WML,
+      TEST_DATA.AUTHORISATION_NUMBERS.VALID.ENGLAND_EAWML_6_DIGITS,
+      TEST_DATA.AUTHORISATION_NUMBERS.VALID.ENGLAND_WML_6_DIGITS,
       TEST_DATA.AUTHORISATION_NUMBERS.VALID.SCOTLAND_PPC_A,
       TEST_DATA.AUTHORISATION_NUMBERS.VALID.SCOTLAND_WML_L,
       TEST_DATA.AUTHORISATION_NUMBERS.VALID.SCOTLAND_WML_L_SUFFIX,

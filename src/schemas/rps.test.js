@@ -163,7 +163,7 @@ describe('Regulatory Position Statement (RPS) Validation', () => {
       const receiver = {
         siteName: 'Test Receiver',
         authorisationNumber:
-          TEST_DATA.AUTHORISATION_NUMBERS.VALID.ENGLAND_EAWML,
+          TEST_DATA.AUTHORISATION_NUMBERS.VALID.ENGLAND_EAWML_6_DIGITS,
         regulatoryPositionStatements: [-123]
       }
 
@@ -179,7 +179,8 @@ describe('Regulatory Position Statement (RPS) Validation', () => {
     it('rejects zero', () => {
       const receiver = {
         siteName: 'Test Receiver',
-        authorisationNumber: TEST_DATA.AUTHORISATION_NUMBERS.VALID.ENGLAND_WML,
+        authorisationNumber:
+          TEST_DATA.AUTHORISATION_NUMBERS.VALID.ENGLAND_WML_6_DIGITS,
         regulatoryPositionStatements: [0]
       }
 
