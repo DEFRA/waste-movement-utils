@@ -37,8 +37,8 @@ const ENGLAND_SITE_AUTHORISATION_NUMBER_REGEXES = [
   /^[A-Z]{2}\d{4}[A-Z]{2}\/D\d{4}$/i, // XX9999XX/D9999
   /^EPR\/[A-Z]{2}\d{4}[A-Z]{2}$/i, // EPR/XX9999XX
   /^EPR\/[A-Z]{2}\d{4}[A-Z]{2}\/D\d{4}$/i, // EPR/XX9999XX/D9999
-  /^EAWML\d{6}$/i, // EAWML999999
-  /^WML\d{6}$/i // WML999999
+  /^EAWML\d{5,6}$/i, // EAWML99999, EAWML999999
+  /^WML\d{5,6}$/i // WML99999, WML999999
 ]
 
 // Scotland (SEPA) site authorisation number regexes
