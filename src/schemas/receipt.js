@@ -1,13 +1,10 @@
 import Joi from 'joi'
 import { MEANS_OF_TRANSPORT } from '../constants/means-of-transport.js'
 import {
-  ENGLAND_CARRIER_REGISTRATION_NUMBER_REGEX,
   IRL_POSTCODE_REGEX,
-  NI_CARRIER_REGISTRATION_NUMBER_REGEX,
-  NRU_CARRIER_REGISTRATION_NUMBER_REGEX,
-  SEPA_CARRIER_REGISTRATION_NUMBER_REGEX,
   UK_POSTCODE_REGEX,
-  ALL_SITE_AUTHORISATION_NUMBER_REGEXES
+  ALL_SITE_AUTHORISATION_NUMBER_REGEXES,
+  ALL_CARRIER_REGISTRATION_NUMBER_REGEXES
 } from '../constants/regexes.js'
 import {
   CARRIER_ERRORS,
@@ -41,10 +38,9 @@ const addressSchema = Joi.object({
 
 const carrierOrBrokerDealerRegistrationNumber = Joi.alternatives()
   .try(
-    Joi.string().pattern(ENGLAND_CARRIER_REGISTRATION_NUMBER_REGEX),
-    Joi.string().pattern(SEPA_CARRIER_REGISTRATION_NUMBER_REGEX),
-    Joi.string().pattern(NRU_CARRIER_REGISTRATION_NUMBER_REGEX),
-    Joi.string().pattern(NI_CARRIER_REGISTRATION_NUMBER_REGEX)
+    ...ALL_CARRIER_REGISTRATION_NUMBER_REGEXES.map((regex) =>
+      Joi.string().pattern(regex)
+    )
   )
   .messages({
     'alternatives.match': CARRIER_ERRORS.REGISTRATION_NUMBER_FORMAT

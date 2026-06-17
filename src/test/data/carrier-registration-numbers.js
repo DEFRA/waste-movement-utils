@@ -16,7 +16,12 @@ export const validSepaCarrierRegistrationNumbers = [
   'SEA/999999',
   'SNO/999999',
   'SWE/999999',
-  'WCR/999999'
+  'WCR/999999',
+  'PCT-A-999',
+  'PCT-B-9999',
+  'PCT-C-99999',
+  'PCT-D-999999',
+  'PCT-E-9999999'
 ]
 
 export const validNrwCarrierRegistrationNumbers =
