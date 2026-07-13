@@ -428,6 +428,26 @@ export function popsAndHazardousComponentsErrorTests({
       )
     })
 
+    // Regression (DWTA-276): a whole omitted/null pops|hazardous object must be
+    // rejected when contains* is true — otherwise the mandatory sourceOfComponents
+    // is never checked and persists as null.
+    it.each([undefined, null])(
+      `should reject when ${containsPopsOrHazardousField} is true and the ${popsOrHazardousObjectProperty} object is "%s"`,
+      (value) => {
+        const payload = createTestPayloadWithHazCodes({
+          wasteItemOverrides: {
+            [containsPopsOrHazardousField]: true,
+            [popsOrHazardousObjectProperty]: value
+          }
+        })
+        const result = receiveMovementRequestSchema.validate(payload)
+        expect(result.error).toBeDefined()
+        expect(result.error.message).toBe(
+          `"wasteItems[0].${popsOrHazardousObjectProperty}" is required`
+        )
+      }
+    )
+
     it.each([undefined, null])(
       `should accept components when ${containsPopsOrHazardousField} is false and no components are provided: "%s"`,
       (value) => {
