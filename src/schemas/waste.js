@@ -312,8 +312,18 @@ export const wasteItemsSchema = Joi.object({
     }),
   weight: weightSchema,
   containsPops: Joi.boolean().strict().required(),
-  pops: popsSchema,
+  // The pops object must be present when containsPops is true. It is attached to
+  // popsSchema so require it here — Joi skips popsSchema's custom presence check
+  // when the whole object is omitted, which would otherwise let a mandatory
+  // sourceOfComponents slip through as null.
+  pops: popsSchema.when('containsPops', {
+    is: true,
+    then: Joi.required()
+  }),
   containsHazardous: Joi.boolean().strict().required(),
-  hazardous: hazardousSchema,
+  hazardous: hazardousSchema.when('containsHazardous', {
+    is: true,
+    then: Joi.required()
+  }),
   disposalOrRecoveryCodes: Joi.array().items(disposalOrRecoveryCodeSchema)
 })
