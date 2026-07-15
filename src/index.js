@@ -35,3 +35,6 @@ export * from './test/common/pops-and-hazardous-components/pops-and-hazardous-co
 export * from './validation-warnings/validation-warnings.js'
 
 export * from './helpers/validation-error-formatter.js'
+export * from './helpers/env-vars.js'
+
+export * from './plugins/basic-auth.js'
