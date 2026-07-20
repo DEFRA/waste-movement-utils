@@ -11,10 +11,13 @@ describe('#basicAuth', () => {
         strategy: jest.fn()
       }
     }
+    const mockLogger = {
+      debug: jest.fn()
+    }
 
     const validateCredentialsSpy = jest.spyOn(func, 'validateCredentials')
 
-    const result = basicAuth(serviceCredentials)
+    const result = basicAuth(serviceCredentials, mockLogger)
 
     expect(result.plugin.name).toEqual('basic-auth')
 
@@ -29,6 +32,9 @@ describe('#basicAuth', () => {
     expect(mockServer.auth.strategy).toHaveBeenCalledWith('basic', 'basic', {
       validate: expect.any(Function)
     })
-    expect(validateCredentialsSpy).toHaveBeenCalledWith(serviceCredentials)
+    expect(validateCredentialsSpy).toHaveBeenCalledWith(
+      serviceCredentials,
+      mockLogger
+    )
   })
 })
