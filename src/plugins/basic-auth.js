@@ -14,21 +14,21 @@ export const basicAuth = (validCredentials, logger) => ({
     name: 'basic-auth',
     async register(server) {
       if (logger) {
-        logger.debug('Basic Auth Plugin: Loaded Plugin')
+        logger.debug('Basic Auth Plugin: Loading')
       }
 
       await server.register(Basic)
 
       if (logger) {
-        logger.debug('Basic Auth Plugin: Registered Plugin')
+        logger.debug('Basic Auth Plugin: Registered')
       }
 
       server.auth.strategy('basic', 'basic', {
-        validate: validateCredentials(validCredentials)
+        validate: validateCredentials(validCredentials, logger)
       })
 
       if (logger) {
-        logger.debug('Basic Auth Plugin: Credential Validation Complete')
+        logger.debug('Basic Auth Plugin: Loaded')
       }
     }
   }
