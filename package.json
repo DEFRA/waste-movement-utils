@@ -1,6 +1,6 @@
 {
-  "name": "waste-movement-utils",
-  "version": "0.0.0",
+  "name": "@defra/waste-movement-utils",
+  "version": "1.0.0",
   "description": "waste-movement-utils",
   "main": "src/index.js",
   "type": "module",
