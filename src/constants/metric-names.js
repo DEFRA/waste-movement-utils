@@ -13,3 +13,14 @@ export const METRIC_NAMES = {
   DEVELOPERS_ACTIVE: 'developers.active',
   DEVELOPERS_ATTEMPTED: 'developers.attempted'
 }
+
+/**
+ * Determines if a metric name is valid
+ *
+ * @param {String} metricName - The metric name
+ *
+ * @returns {Boolean} True if the metric name is valid, otherwise false
+ */
+export function isValidMetricName(metricName) {
+  return Object.values(METRIC_NAMES).includes(metricName)
+}
