@@ -1,8 +1,5 @@
 import { isValidMetricName } from '../constants/metric-names.js'
 
-export const openSearchMetricsErrorPrefix =
-  'Failed to log OpenSearch metrics: Expected metricName, dimensions and logger but received'
-
 /**
  * Logs a metric to OpenSearch
  *
@@ -11,16 +8,20 @@ export const openSearchMetricsErrorPrefix =
  * @param {Object} logger - The logger
  */
 export function logOpenSearchMetrics(metricName, dimensions, logger) {
-  if (
-    isValidMetricName(metricName) &&
-    dimensions &&
-    logger &&
-    Object.prototype.hasOwnProperty.call(logger, 'info')
-  ) {
-    return logger.info(dimensions, `Metric: ${metricName}`)
-  }
+  try {
+    if (
+      isValidMetricName(metricName) &&
+      dimensions &&
+      logger &&
+      Object.prototype.hasOwnProperty.call(logger, 'info')
+    ) {
+      return logger.info(dimensions, `Metric: ${metricName}`)
+    }
 
-  throw new Error(
-    `${openSearchMetricsErrorPrefix} ${JSON.stringify({ metricName, dimensions, logger })}`
-  )
+    throw new Error(
+      `Expected metricName, dimensions and logger but received ${JSON.stringify({ metricName, dimensions, logger })}`
+    )
+  } catch (err) {
+    logger.error(`Failed to log OpenSearch metrics: ${err.message}`)
+  }
 }
