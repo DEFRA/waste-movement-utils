@@ -1,5 +1,6 @@
 export const METRIC_NAMES = {
   RECEIPTS_RECEIVED: 'receipts.received',
+  RECEIPTS_RECEIVED_BULK: 'receipts.received.bulk',
   VALIDATION_WARNINGS_COUNT: 'validation.warnings.count',
   VALIDATION_REQUESTS_WITH_WARNINGS: 'validation.requests.with_warnings',
   VALIDATION_REQUESTS_WITHOUT_WARNINGS: 'validation.requests.without_warnings',
@@ -11,7 +12,13 @@ export const METRIC_NAMES = {
   VALIDATION_ERROR_CATEGORY: 'validation.error.category',
   ERRORS_BY_STATUS_CODE: 'errors.by_status_code',
   DEVELOPERS_ACTIVE: 'developers.active',
-  DEVELOPERS_ATTEMPTED: 'developers.attempted'
+  DEVELOPERS_ATTEMPTED: 'developers.attempted',
+  AUDIT_ERRORS_FAILED: 'audit.errors.failed',
+  RECEIVER_ORG_ID: 'receiver.orgId',
+  RECEIVER_ORG_ID_BULK: 'receiver.orgId.bulk',
+  PAT_CREATE: 'pat.create',
+  PAT_SUBMISSION: 'pat.submission',
+  PAT_SCENARIO_RESULT: 'pat.scenario.result'
 }
 
 /**
