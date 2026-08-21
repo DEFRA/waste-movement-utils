@@ -1,12 +1,30 @@
 import { MEANS_OF_TRANSPORT } from '../constants/means-of-transport.js'
 import { REASONS_FOR_NO_REGISTRATION_NUMBER } from '../constants/reasons-for-no-registration-number.js'
+import { carrierBrokerDealerRegistrationNumberErrorTests } from '../test/common/carrier-broker-dealer-regisration-number/carrier-broker-dealer-registration-number-error-tests.js'
 import {
   invalidCarrierRegistrationNumbers,
   validCarrierRegistrationNumbers
 } from '../test/data/carrier-registration-numbers.js'
-import { carrierSchema } from './carrier'
+import { receiveMovementRequestSchema } from './receipt.js'
+import { createMovementRequest } from '../test/utils/createMovementRequest.js'
 
 describe('Carrier Registration Validation', () => {
+  const basePayload = createMovementRequest()
+
+  const validate = (carrier) =>
+    receiveMovementRequestSchema.validate({ ...basePayload, carrier })
+
+  carrierBrokerDealerRegistrationNumberErrorTests({
+    receiveMovementRequestSchema,
+    createMovementRequest,
+    carrierOrBrokerDealer: 'Carrier',
+    testPayload: {
+      registrationNumber: undefined,
+      organisationName: 'Test Carrier',
+      meansOfTransport: MEANS_OF_TRANSPORT[1]
+    }
+  })
+
   describe('Scenario: Valid carrier registration number', () => {
     it.each(REASONS_FOR_NO_REGISTRATION_NUMBER)(
       'accepts submission when registrationNumber is "null" and reasonForNoRegistrationNumber is "%s"',
@@ -18,7 +36,7 @@ describe('Carrier Registration Validation', () => {
           meansOfTransport: MEANS_OF_TRANSPORT[1]
         }
 
-        const { error } = carrierSchema.validate(carrier)
+        const { error } = validate(carrier)
         expect(error).toBeUndefined()
       }
     )
@@ -33,7 +51,7 @@ describe('Carrier Registration Validation', () => {
           meansOfTransport: MEANS_OF_TRANSPORT[1]
         }
 
-        const { error } = carrierSchema.validate(carrier)
+        const { error } = validate(carrier)
         expect(error).toBeUndefined()
       }
     )
@@ -47,9 +65,9 @@ describe('Carrier Registration Validation', () => {
         meansOfTransport: MEANS_OF_TRANSPORT[1]
       }
 
-      const { error } = carrierSchema.validate(carrier)
+      const { error } = validate(carrier)
       expect(error).toBeDefined()
-      expect(error.message).toBe('"registrationNumber" is required')
+      expect(error.message).toBe('"carrier.registrationNumber" is required')
     })
 
     it.each(invalidCarrierRegistrationNumbers)(
@@ -61,10 +79,10 @@ describe('Carrier Registration Validation', () => {
           meansOfTransport: MEANS_OF_TRANSPORT[1]
         }
 
-        const { error } = carrierSchema.validate(carrier)
+        const { error } = validate(carrier)
         expect(error).toBeDefined()
         expect(error.message).toBe(
-          '"registrationNumber" must be in a valid England, SEPA, NRW or NI format'
+          '"carrier.registrationNumber" must be in a valid England, SEPA, NRW or NI format'
         )
       }
     )
@@ -77,10 +95,10 @@ describe('Carrier Registration Validation', () => {
         meansOfTransport: MEANS_OF_TRANSPORT[1]
       }
 
-      const { error } = carrierSchema.validate(carrier)
+      const { error } = validate(carrier)
       expect(error).toBeDefined()
       expect(error.message).toBe(
-        `"reasonForNoRegistrationNumber" must be one of: ${REASONS_FOR_NO_REGISTRATION_NUMBER.join(', ')}`
+        `"carrier.reasonForNoRegistrationNumber" must be one of: ${REASONS_FOR_NO_REGISTRATION_NUMBER.join(', ')}`
       )
     })
 
@@ -91,9 +109,9 @@ describe('Carrier Registration Validation', () => {
         meansOfTransport: undefined
       }
 
-      const { error } = carrierSchema.validate(carrier)
+      const { error } = validate(carrier)
       expect(error).toBeDefined()
-      expect(error.message).toBe('"meansOfTransport" is required')
+      expect(error.message).toBe('"carrier.meansOfTransport" is required')
     })
 
     it('rejects submission when both registrationNumber and reasonForNoRegistrationNumber are provided', () => {
@@ -104,7 +122,7 @@ describe('Carrier Registration Validation', () => {
         meansOfTransport: MEANS_OF_TRANSPORT[1]
       }
 
-      const { error } = carrierSchema.validate(carrier)
+      const { error } = validate(carrier)
       expect(error).toBeDefined()
       expect(error.message).toBe(
         'carrier.reasonForNoRegistrationNumber should only be provided when carrier.registrationNumber is not provided'
@@ -121,9 +139,9 @@ describe('Carrier Registration Validation', () => {
           meansOfTransport: MEANS_OF_TRANSPORT[1]
         }
 
-        const { error } = carrierSchema.validate(carrier)
+        const { error } = validate(carrier)
         expect(error).toBeDefined()
-        expect(error.message).toBe('"registrationNumber" is required')
+        expect(error.message).toBe('"carrier.registrationNumber" is required')
       }
     )
   })
@@ -139,7 +157,7 @@ describe('Carrier Registration Validation', () => {
         meansOfTransport: MEANS_OF_TRANSPORT[1]
       }
 
-      const { error } = carrierSchema.validate(carrier)
+      const { error } = validate(carrier)
       expect(error).toBeUndefined()
     })
 
@@ -149,9 +167,9 @@ describe('Carrier Registration Validation', () => {
         meansOfTransport: MEANS_OF_TRANSPORT[1]
       }
 
-      const { error } = carrierSchema.validate(carrier)
+      const { error } = validate(carrier)
       expect(error).toBeDefined()
-      expect(error.message).toBe('"organisationName" is required')
+      expect(error.message).toBe('"carrier.organisationName" is required')
     })
 
     it('rejects address without postcode', () => {
@@ -162,9 +180,9 @@ describe('Carrier Registration Validation', () => {
         address: { fullAddress: '123 Test St' } // Missing postcode
       }
 
-      const { error } = carrierSchema.validate(carrier)
+      const { error } = validate(carrier)
       expect(error).toBeDefined()
-      expect(error.message).toBe('"address.postcode" is required')
+      expect(error.message).toBe('"carrier.address.postcode" is required')
     })
 
     it('rejects invalid UK postcode', () => {
@@ -175,10 +193,10 @@ describe('Carrier Registration Validation', () => {
         address: { fullAddress: '123 Test St', postcode: 'INVALID' }
       }
 
-      const { error } = carrierSchema.validate(carrier)
+      const { error } = validate(carrier)
       expect(error).toBeDefined()
       expect(error.message).toBe(
-        '"address.postcode" must be in valid UK or Ireland format'
+        '"carrier.address.postcode" must be in valid UK or Ireland format'
       )
     })
 
@@ -190,9 +208,9 @@ describe('Carrier Registration Validation', () => {
         emailAddress: 'not-an-email'
       }
 
-      const { error } = carrierSchema.validate(carrier)
+      const { error } = validate(carrier)
       expect(error).toBeDefined()
-      expect(error.message).toBe('"emailAddress" must be a valid email')
+      expect(error.message).toBe('"carrier.emailAddress" must be a valid email')
     })
   })
 
@@ -205,7 +223,7 @@ describe('Carrier Registration Validation', () => {
         vehicleRegistration: 'ABC 123'
       }
 
-      const { error } = carrierSchema.validate(carrier)
+      const { error } = validate(carrier)
       expect(error).toBeUndefined()
     })
 
@@ -217,7 +235,7 @@ describe('Carrier Registration Validation', () => {
         vehicleRegistration: undefined
       }
 
-      const { error } = carrierSchema.validate(carrier)
+      const { error } = validate(carrier)
       expect(error).toBeDefined()
       expect(error.message).toBe(
         'If carrier.meansOfTransport is "Road" then carrier.vehicleRegistration is required'
@@ -234,7 +252,7 @@ describe('Carrier Registration Validation', () => {
           vehicleRegistration: undefined
         }
 
-        const { error } = carrierSchema.validate(carrier)
+        const { error } = validate(carrier)
         expect(error).toBeUndefined()
       }
     )
@@ -249,7 +267,7 @@ describe('Carrier Registration Validation', () => {
           vehicleRegistration: 'ABC 123'
         }
 
-        const { error } = carrierSchema.validate(carrier)
+        const { error } = validate(carrier)
         expect(error).toBeDefined()
         expect(error.message).toBe(
           'If carrier.meansOfTransport is not "Road" then carrier.vehicleRegistration is not applicable'
@@ -258,28 +276,3 @@ describe('Carrier Registration Validation', () => {
     )
   })
 })
-
-// import { carrierSchema } from "./carrier"
-
-// CBDL999
-// const validCarrier = {fullAddress: '1 South East London Road, London', postcode: 'SE1 1SE'}
-// const invalidCarrier = {
-//   fullAddress: '1 South East London Road, London',
-//   postcode: 'SE1 1SEEE'
-// }
-
-// it('should accept valid payload', () => {
-
-//   const { error } = carrierSchema.validate(validAddress)
-
-//   expect(error).toBeUndefined()
-// })
-
-// it('should return an error when payload is invalid', () => {
-//   const { error } = carrierSchema.validate(invalidAddress)
-
-//   expect(error).toBeDefined()
-//   expect(error.message).toEqual(
-//     '"postcode" must be in valid UK or Ireland format'
-//   )
-// })

@@ -1,112 +1,67 @@
 import { TEST_DATA } from './test-constants.js'
-import { receiveMovementRequestSchema } from './receipt.js'
-import { createMovementRequest } from '../test/utils/createMovementRequest.js'
+import { receiverSchema } from './receiver.js'
 
 describe('Receiver Validation', () => {
-  const basePayload = createMovementRequest()
-
-  const validate = (receiver, receipt) =>
-    receiveMovementRequestSchema.validate({ ...basePayload, receiver, receipt })
-
-  const createStandardReceipt = () => ({
-    address: {
-      fullAddress: '1 Receiver St, Town',
-      postcode: 'TE1 1ST'
-    }
-  })
-
   it('accepts complete receiver info with UK postcode, email and phone', () => {
     const receiver = {
       siteName: 'Test Receiver',
       emailAddress: 'receiver@example.com',
       phoneNumber: '01234567890',
       authorisationNumber:
-        TEST_DATA.AUTHORISATION_NUMBERS.VALID.ENGLAND_XX9999XX
+        TEST_DATA.AUTHORISATION_NUMBERS.VALID.ENGLAND_XX9999XX,
+      address: { fullAddress: '1 Receiver St, Town', postcode: 'TE1 1ST' }
     }
 
-    const receipt = {
-      address: {
-        fullAddress: '1 Receiver St, Town',
-        postcode: 'TE1 1ST'
-      }
-    }
-
-    const { error } = validate(receiver, receipt)
+    const { error } = receiverSchema.validate(receiver)
     expect(error).toBeUndefined()
   })
 
   it('accepts when no receiver tel/email are provided', () => {
     const receiver = {
       siteName: 'Test Receiver',
-      authorisationNumber: TEST_DATA.AUTHORISATION_NUMBERS.VALID.WALES_XX9999XX
+      authorisationNumber: TEST_DATA.AUTHORISATION_NUMBERS.VALID.WALES_XX9999XX,
+      address: { fullAddress: '1 Receiver St, Town', postcode: 'TE1 1ST' }
     }
 
-    const receipt = {
-      address: {
-        fullAddress: '1 Receiver St, Town',
-        postcode: 'TE1 1ST'
-      }
-    }
-
-    const { error } = validate(receiver, receipt)
+    const { error } = receiverSchema.validate(receiver)
     expect(error).toBeUndefined()
   })
 
   it('rejects when authorisation number is undefined', () => {
     const receiver = {
       siteName: 'Test Receiver',
-      authorisationNumber: undefined
+      authorisationNumber: undefined,
+      address: { fullAddress: '1 Receiver St, Town', postcode: 'TE1 1ST' }
     }
 
-    const receipt = {
-      address: {
-        fullAddress: '1 Receiver St, Town',
-        postcode: 'TE1 1ST'
-      }
-    }
-
-    const { error } = validate(receiver, receipt)
+    const { error } = receiverSchema.validate(receiver)
     expect(error).toBeDefined()
-    expect(error.message).toBe('"receiver.authorisationNumber" is required')
+    expect(error.message).toBe('"authorisationNumber" is required')
   })
 
   it('rejects when authorisation number is null', () => {
     const receiver = {
       siteName: 'Test Receiver',
-      authorisationNumber: null
+      authorisationNumber: null,
+      address: { fullAddress: '1 Receiver St, Town', postcode: 'TE1 1ST' }
     }
 
-    const receipt = {
-      address: {
-        fullAddress: '1 Receiver St, Town',
-        postcode: 'TE1 1ST'
-      }
-    }
-
-    const { error } = validate(receiver, receipt)
+    const { error } = receiverSchema.validate(receiver)
     expect(error).toBeDefined()
-    expect(error.message).toBe(
-      '"receiver.authorisationNumber" must be a string'
-    )
+    expect(error.message).toBe('"authorisationNumber" must be a string')
   })
 
   it('rejects when authorisation number is an empty string', () => {
     const receiver = {
       siteName: 'Test Receiver',
-      authorisationNumber: ''
+      authorisationNumber: '',
+      address: { fullAddress: '1 Receiver St, Town', postcode: 'TE1 1ST' }
     }
 
-    const receipt = {
-      address: {
-        fullAddress: '1 Receiver St, Town',
-        postcode: 'TE1 1ST'
-      }
-    }
-
-    const { error } = validate(receiver, receipt)
+    const { error } = receiverSchema.validate(receiver)
     expect(error).toBeDefined()
     expect(error.message).toBe(
-      '"receiver.authorisationNumber" is not allowed to be empty'
+      '"authorisationNumber" is not allowed to be empty'
     )
   })
 
@@ -115,16 +70,9 @@ describe('Receiver Validation', () => {
       address: { fullAddress: '1 Receiver St, Town', postcode: 'TE1 1ST' }
     }
 
-    const receipt = {
-      address: {
-        fullAddress: '1 Receiver St, Town',
-        postcode: 'TE1 1ST'
-      }
-    }
-
-    const { error } = validate(receiver, receipt)
+    const { error } = receiverSchema.validate(receiver)
     expect(error).toBeDefined()
-    expect(error.message).toBe('"receiver.siteName" is required')
+    expect(error.message).toBe('"siteName" is required')
   })
 
   it('rejects incomplete receipt without address', () => {
@@ -135,61 +83,46 @@ describe('Receiver Validation', () => {
       authorisationNumber: TEST_DATA.AUTHORISATION_NUMBERS.VALID.SCOTLAND_PPC_A
     }
 
-    const receipt = {}
-
-    const { error } = validate(receiver, receipt)
+    const { error } = receiverSchema.validate(receiver)
     expect(error).toBeDefined()
-    expect(error.message).toBe('"receipt.address" is required')
+    expect(error.message).toBe('"address" is required')
   })
 
   it('rejects incomplete receiver address without postcode', () => {
     const receiver = {
       siteName: 'Test Receiver',
-      authorisationNumber: TEST_DATA.AUTHORISATION_NUMBERS.VALID.WALES_EPR
-    }
-
-    const receipt = {
+      authorisationNumber: TEST_DATA.AUTHORISATION_NUMBERS.VALID.WALES_EPR,
       address: { fullAddress: '1 Receiver St, Town' }
     }
 
-    const { error } = validate(receiver, receipt)
+    const { error } = receiverSchema.validate(receiver)
     expect(error).toBeDefined()
-    expect(error.message).toBe('"receipt.address.postcode" is required')
+    expect(error.message).toBe('"address.postcode" is required')
   })
 
-  it('rejects incomplete receiver address without fullAddress', () => {
+  it('accepts incomplete receiver address without fullAddress', () => {
     const receiver = {
       siteName: 'Test Receiver',
-      authorisationNumber: TEST_DATA.AUTHORISATION_NUMBERS.VALID.NI_WPPC
+      authorisationNumber: TEST_DATA.AUTHORISATION_NUMBERS.VALID.NI_WPPC,
+      address: { postcode: 'SE1 1SE' }
     }
 
-    const receipt = {
-      address: { postcode: 'TE1 1ST' }
-    }
-
-    const { error } = validate(receiver, receipt)
-    expect(error).toBeDefined()
-    expect(error.message).toBe('"receipt.address.fullAddress" is required')
+    const { error } = receiverSchema.validate(receiver)
+    expect(error).not.toBeDefined()
   })
 
   it('rejects invalid UK postcode', () => {
     const receiver = {
       siteName: 'Invalid Postcode Receiver',
       authorisationNumber:
-        TEST_DATA.AUTHORISATION_NUMBERS.VALID.ENGLAND_EAWML_6_DIGITS
+        TEST_DATA.AUTHORISATION_NUMBERS.VALID.ENGLAND_EAWML_6_DIGITS,
+      address: { fullAddress: 'Full address', postcode: 'SE1 1SEEEEE' }
     }
 
-    const receipt = {
-      address: {
-        fullAddress: '1 Receiver St, Town',
-        postcode: 'INVALID'
-      }
-    }
-
-    const { error } = validate(receiver, receipt)
+    const { error } = receiverSchema.validate(receiver)
     expect(error).toBeDefined()
     expect(error.message).toBe(
-      '"receipt.address.postcode" must be in valid UK format'
+      '"address.postcode" must be in valid UK or Ireland format'
     )
   })
 
@@ -197,20 +130,14 @@ describe('Receiver Validation', () => {
     const receiver = {
       siteName: 'Invalid Eircode Receiver',
       authorisationNumber:
-        TEST_DATA.AUTHORISATION_NUMBERS.VALID.ENGLAND_WML_6_DIGITS
+        TEST_DATA.AUTHORISATION_NUMBERS.VALID.ENGLAND_WML_6_DIGITS,
+      address: { fullAddress: 'Full address', postcode: 'INVALID EIR POSTCODE' }
     }
 
-    const receipt = {
-      address: {
-        fullAddress: '1 Receiver St, Dublin',
-        postcode: 'P85 YH98'
-      }
-    }
-
-    const { error } = validate(receiver, receipt)
+    const { error } = receiverSchema.validate(receiver)
     expect(error).toBeDefined()
     expect(error.message).toBe(
-      '"receipt.address.postcode" must be in valid UK format'
+      '"address.postcode" must be in valid UK or Ireland format'
     )
   })
 
@@ -218,105 +145,36 @@ describe('Receiver Validation', () => {
     const receiver = {
       siteName: 'Invalid Email Receiver',
       emailAddress: 'not-an-email',
-      authorisationNumber: TEST_DATA.AUTHORISATION_NUMBERS.VALID.SCOTLAND_WML_L
+      authorisationNumber: TEST_DATA.AUTHORISATION_NUMBERS.VALID.SCOTLAND_WML_L,
+      address: { fullAddress: 'Full address', postcode: 'SE1 1SE' }
     }
 
-    const receipt = {
-      address: {
-        fullAddress: '1 Receiver St, Town',
-        postcode: 'TE1 1ST'
-      }
-    }
-
-    const { error } = validate(receiver, receipt)
+    const { error } = receiverSchema.validate(receiver)
     expect(error).toBeDefined()
-    expect(error.message).toBe('"receiver.emailAddress" must be a valid email')
-  })
-
-  it('accepts receiver with authorisation number and valid RPS numbers', () => {
-    const receiver = {
-      siteName: TEST_DATA.RECEIVER.SITE_NAME,
-      authorisationNumber: TEST_DATA.AUTHORISATION_NUMBERS.COMPLEX,
-      regulatoryPositionStatements: [123, 456]
-    }
-
-    const receipt = {
-      address: TEST_DATA.ADDRESS.RECEIVER
-    }
-
-    const { error } = validate(receiver, receipt)
-    expect(error).toBeUndefined()
-  })
-
-  it('rejects receiver with invalid RPS number format', () => {
-    const receiver = {
-      siteName: TEST_DATA.RECEIVER.SITE_NAME,
-      authorisationNumber: TEST_DATA.AUTHORISATION_NUMBERS.COMPLEX,
-      regulatoryPositionStatements: [TEST_DATA.RPS.INVALID.STRINGS[0]]
-    }
-
-    const receipt = {
-      address: TEST_DATA.ADDRESS.RECEIVER
-    }
-
-    const { error } = validate(receiver, receipt)
-    expect(error).toBeDefined()
-    expect(error.message).toContain('must be a number')
+    expect(error.message).toBe('"emailAddress" must be a valid email')
   })
 
   it('rejects when an authorisation number is provided with an invalid format', () => {
     const receiver = {
       siteName: 'Test Receiver',
-      authorisationNumber: 1
+      authorisationNumber: 1,
+      address: { fullAddress: 'Full address', postcode: 'SE1 1SE' }
     }
 
-    const receipt = {
-      address: {
-        fullAddress: '1 Receiver St, Town',
-        postcode: 'TE1 1ST'
-      }
-    }
-
-    const { error } = validate(receiver, receipt)
+    const { error } = receiverSchema.validate(receiver)
     expect(error).toBeDefined()
-    expect(error.message).toBe(
-      '"receiver.authorisationNumber" must be a string'
-    )
-  })
-
-  it('accepts receiver with only regulatory position statements', () => {
-    const receiver = {
-      siteName: 'Test Receiver',
-      authorisationNumber: TEST_DATA.AUTHORISATION_NUMBERS.VALID.SCOTLAND_SEPA,
-      regulatoryPositionStatements: [123, 456, 789]
-    }
-
-    const receipt = {
-      address: {
-        fullAddress: '1 Receiver St, Town',
-        postcode: 'TE1 1ST'
-      }
-    }
-
-    const { error } = validate(receiver, receipt)
-    expect(error).toBeUndefined()
+    expect(error.message).toBe('"authorisationNumber" must be a string')
   })
 
   it('accepts receiver with only authorisation number', () => {
     const receiver = {
       siteName: 'Test Receiver',
       authorisationNumber:
-        TEST_DATA.AUTHORISATION_NUMBERS.VALID.ENGLAND_XX9999XX
+        TEST_DATA.AUTHORISATION_NUMBERS.VALID.ENGLAND_XX9999XX,
+      address: { fullAddress: 'Full address', postcode: 'SE1 1SE' }
     }
 
-    const receipt = {
-      address: {
-        fullAddress: '1 Receiver St, Town',
-        postcode: 'TE1 1ST'
-      }
-    }
-
-    const { error } = validate(receiver, receipt)
+    const { error } = receiverSchema.validate(receiver)
     expect(error).toBeUndefined()
   })
 
@@ -331,13 +189,14 @@ describe('Receiver Validation', () => {
       test(`invalidates ${formatExample}`, () => {
         const receiver = {
           siteName: 'Test Receiver',
-          authorisationNumber: testDataValue
+          authorisationNumber: testDataValue,
+          address: { fullAddress: 'Full address', postcode: 'SE1 1SE' }
         }
 
-        const { error } = validate(receiver, createStandardReceipt())
+        const { error } = receiverSchema.validate(receiver)
         expect(error).toBeDefined()
         expect(error.message).toBe(
-          '"receiver.authorisationNumber" must be in a valid UK format'
+          '"authorisationNumber" must be in a valid UK format'
         )
       })
     })
@@ -348,10 +207,11 @@ describe('Receiver Validation', () => {
       (format) => {
         const receiver = {
           siteName: 'Test Receiver',
-          authorisationNumber: format
+          authorisationNumber: format,
+          address: { fullAddress: 'Full address', postcode: 'SE1 1SE' }
         }
 
-        const { error } = validate(receiver, createStandardReceipt())
+        const { error } = receiverSchema.validate(receiver)
         expect(error).toBeUndefined()
       }
     )
@@ -373,13 +233,14 @@ describe('Receiver Validation', () => {
       test(`invalidates ${formatExample}`, () => {
         const receiver = {
           siteName: 'Test Receiver',
-          authorisationNumber: testDataValue
+          authorisationNumber: testDataValue,
+          address: { fullAddress: 'Full address', postcode: 'SE1 1SE' }
         }
 
-        const { error } = validate(receiver, createStandardReceipt())
+        const { error } = receiverSchema.validate(receiver)
         expect(error).toBeDefined()
         expect(error.message).toBe(
-          '"receiver.authorisationNumber" must be in a valid UK format'
+          '"authorisationNumber" must be in a valid UK format'
         )
       })
     })
