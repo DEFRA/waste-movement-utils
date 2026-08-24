@@ -258,28 +258,3 @@ describe('Carrier Registration Validation', () => {
     )
   })
 })
-
-// import { carrierSchema } from "./carrier"
-
-// CBDL999
-// const validCarrier = {fullAddress: '1 South East London Road, London', postcode: 'SE1 1SE'}
-// const invalidCarrier = {
-//   fullAddress: '1 South East London Road, London',
-//   postcode: 'SE1 1SEEE'
-// }
-
-// it('should accept valid payload', () => {
-
-//   const { error } = carrierSchema.validate(validAddress)
-
-//   expect(error).toBeUndefined()
-// })
-
-// it('should return an error when payload is invalid', () => {
-//   const { error } = carrierSchema.validate(invalidAddress)
-
-//   expect(error).toBeDefined()
-//   expect(error.message).toEqual(
-//     '"postcode" must be in valid UK or Ireland format'
-//   )
-// })

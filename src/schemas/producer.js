@@ -18,27 +18,3 @@ export const producerSchema = Joi.object({
 
   councilMovement: Joi.boolean().required()
 })
-/*
-  // Commercial: business identity is mandatory.
-  .when('wasteSource', {
-    is: 'Commercial',
-    then: Joi.object({
-      organisationName: Joi.string().required(),
-      authorisationNumber: Joi.string().required(),
-      sicCode: Joi.string()
-        .pattern(/^\d{5}$/)
-        .required()
-    })
-  })
-  // Household: business-only fields are forbidden.
-  .when('wasteSource', {
-    is: 'Household',
-    then: Joi.object({
-      organisationName: Joi.forbidden(),
-      authorisationNumber: Joi.forbidden(),
-      sicCode: Joi.forbidden(),
-      emailAddress: Joi.forbidden(),
-      phoneNumber: Joi.forbidden()
-    })
-  })
-    */

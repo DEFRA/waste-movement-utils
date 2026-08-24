@@ -5,10 +5,10 @@ import {
   sourceOfComponentsProvided
 } from '../constants/source-of-components.js'
 import { movementSchema } from './movement.js'
-import { v4 as uuidv4 } from 'uuid'
+import { randomUUID } from 'node:crypto'
 
 const validMovement = {
-  apiCode: uuidv4(),
+  apiCode: randomUUID(),
   estimatedDateTimeCollected: '2025-08-29T15:24:00Z',
   otherReferencesForMovement: [
     {
