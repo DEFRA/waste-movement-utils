@@ -25,6 +25,7 @@ export * from './schemas/test-helpers/waste-test-helpers.js'
 export * from './schemas/waste.js'
 export * from './schemas/weight.js'
 export * from './schemas/production-approval-tests.js'
+export * from './schemas/movement.js'
 
 export * from './test/create-test-mongo-db.js'
 export * from './test/data/carrier-registration-numbers.js'

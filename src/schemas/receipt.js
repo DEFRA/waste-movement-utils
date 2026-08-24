@@ -1,50 +1,25 @@
 import Joi from 'joi'
-import { MEANS_OF_TRANSPORT } from '../constants/means-of-transport.js'
 import {
-  IRL_POSTCODE_REGEX,
   UK_POSTCODE_REGEX,
-  ALL_SITE_AUTHORISATION_NUMBER_REGEXES,
-  ALL_CARRIER_REGISTRATION_NUMBER_REGEXES
+  ALL_SITE_AUTHORISATION_NUMBER_REGEXES
 } from '../constants/regexes.js'
 import {
-  CARRIER_ERRORS,
   ADDRESS_ERRORS,
   CONSIGNMENT_ERRORS,
   AUTHORISATION_ERRORS
 } from '../constants/validation-error-messages.js'
-import { REASONS_FOR_NO_REGISTRATION_NUMBER } from '../constants/reasons-for-no-registration-number.js'
 import { NO_CONSIGNMENT_REASONS } from '../constants/no-consignment-reasons.js'
 import {
   hasHazardousEwcCodes,
   hazardousWasteConsignmentCodeSchema
 } from './hazardous-waste-consignment.js'
 import { wasteItemsSchema } from './waste.js'
+import { addressSchema } from './address.js'
+import { carrierSchema } from './carrier.js'
+import { brokerOrDealerSchema } from './brokerOrDealer.js'
 
 const MIN_STRING_LENGTH = 1
 const LONG_STRING_MAX_LENGTH = 5000
-
-const addressSchema = Joi.object({
-  fullAddress: Joi.string(),
-  postcode: Joi.alternatives()
-    .try(
-      Joi.string().pattern(UK_POSTCODE_REGEX),
-      Joi.string().pattern(IRL_POSTCODE_REGEX)
-    )
-    .messages({
-      'alternatives.match': ADDRESS_ERRORS.POSTCODE_UK_IRELAND_FORMAT
-    })
-    .required()
-})
-
-const carrierOrBrokerDealerRegistrationNumber = Joi.alternatives()
-  .try(
-    ...ALL_CARRIER_REGISTRATION_NUMBER_REGEXES.map((regex) =>
-      Joi.string().pattern(regex)
-    )
-  )
-  .messages({
-    'alternatives.match': CARRIER_ERRORS.REGISTRATION_NUMBER_FORMAT
-  })
 
 /**
  * Determines if a site authorisation number is valid
@@ -71,50 +46,6 @@ const authorisationNumberSchema = Joi.string()
   })
   .required()
 
-const carrierSchema = Joi.object({
-  registrationNumber: carrierOrBrokerDealerRegistrationNumber
-    .allow(null, '')
-    .required(),
-  reasonForNoRegistrationNumber: Joi.string()
-    .valid(...REASONS_FOR_NO_REGISTRATION_NUMBER)
-    .allow(null, '')
-    .when('registrationNumber', {
-      switch: [
-        {
-          is: null,
-          then: Joi.required()
-        },
-        {
-          is: '',
-          then: Joi.required()
-        }
-      ],
-      otherwise: Joi.forbidden()
-    })
-    .messages({
-      'string.empty': CARRIER_ERRORS.REGISTRATION_OR_REASON_REQUIRED,
-      'string.base': CARRIER_ERRORS.REGISTRATION_OR_REASON_REQUIRED,
-      'any.unknown': CARRIER_ERRORS.REASON_ONLY_FOR_NULL,
-      'any.only': `${CARRIER_ERRORS.REASON_FOR_NO_REGISTRATION_NUMBER_INVALID_PREFIX} ${REASONS_FOR_NO_REGISTRATION_NUMBER.join(', ')}`
-    }),
-  organisationName: Joi.string().required(),
-  address: addressSchema,
-  emailAddress: Joi.string().email(),
-  phoneNumber: Joi.string(),
-  vehicleRegistration: Joi.when('meansOfTransport', {
-    is: Joi.string().required().valid('Road'),
-    then: Joi.string().required(),
-    otherwise: Joi.forbidden()
-  }).messages({
-    'any.required': CARRIER_ERRORS.VEHICLE_REG_REQUIRED_FOR_ROAD,
-    'any.unknown': CARRIER_ERRORS.VEHICLE_REG_ONLY_ALLOWED_FOR_ROAD
-  }),
-  meansOfTransport: Joi.string()
-    .valid(...MEANS_OF_TRANSPORT)
-    .required(),
-  otherMeansOfTransport: Joi.string()
-})
-
 const receiverAddressSchema = addressSchema.keys({
   fullAddress: Joi.string().required(),
   postcode: Joi.string()
@@ -135,14 +66,6 @@ const receiverSchema = Joi.object({
 
 const receiptSchema = Joi.object({
   address: receiverAddressSchema.required()
-})
-
-const brokerOrDealerSchema = Joi.object({
-  organisationName: Joi.string().required(),
-  address: addressSchema,
-  registrationNumber: carrierOrBrokerDealerRegistrationNumber,
-  phoneNumber: Joi.string(),
-  emailAddress: Joi.string().email()
 })
 
 export const receiveMovementRequestSchema = Joi.object({
