@@ -211,6 +211,16 @@ describe('receiveMovementRequestSchema - otherReferencesForMovement validation',
       )
     })
 
+    it('should reject when carrier is missing', () => {
+      const payload = {
+        ...basePayload,
+        carrier: undefined
+      }
+      const { error } = receiveMovementRequestSchema.validate(payload)
+      expect(error).toBeDefined()
+      expect(error.message).toContain('"carrier" is required')
+    })
+
     it('should reject when receiver is missing', () => {
       const payload = {
         ...basePayload,
