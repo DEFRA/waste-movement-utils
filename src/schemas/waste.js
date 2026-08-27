@@ -310,7 +310,7 @@ export const wasteItemsSchema = Joi.object({
     .messages({
       'InvalidValue.containerType': WASTE_ERRORS.CONTAINER_TYPE_INVALID
     }),
-  weight: weightSchema,
+  weight: weightSchema.required(),
   containsPops: Joi.boolean().strict().required(),
   // The pops object must be present when containsPops is true. It is attached to
   // popsSchema so require it here — Joi skips popsSchema's custom presence check
