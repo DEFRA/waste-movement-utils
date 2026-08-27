@@ -85,7 +85,7 @@ export const receiveMovementRequestSchema = Joi.object({
   ),
   specialHandlingRequirements: Joi.string().max(LONG_STRING_MAX_LENGTH),
   wasteItems: Joi.array().items(wasteItemsSchema).required().min(1),
-  carrier: carrierSchema,
+  carrier: carrierSchema.required(),
   brokerOrDealer: brokerOrDealerSchema,
   receiver: receiverSchema.required(),
   receipt: receiptSchema.required()
