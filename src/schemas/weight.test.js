@@ -21,6 +21,19 @@ describe('Receipt Schema Validation - Weight', () => {
       return receiveMovementRequestSchema.validate(payload)
     }
 
+    it('should require weight object in each waste item', () => {
+      const payload = createTestPayload({
+        wasteItemOverrides: { weight: undefined }
+      })
+
+      const result = receiveMovementRequestSchema.validate(payload)
+
+      expect(result.error).toBeDefined()
+      expect(result.error.message).toContain(
+        '"wasteItems[0].weight" is required'
+      )
+    })
+
     describe('Metric Validation', () => {
       it.each(['Grams', 'Kilograms', 'Tonnes'])(
         'should accept valid metric - %s',
