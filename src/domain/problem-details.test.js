@@ -1,5 +1,25 @@
 import { ProblemDetails } from './problem-details.js'
 
+function makeBoom({
+  statusCode = 400,
+  error = 'Bad Request',
+  message = 'Something went wrong',
+  headers = {},
+  data = null
+} = {}) {
+  return {
+    message,
+    data,
+    output: {
+      statusCode,
+      headers,
+      payload: {
+        error,
+        message
+      }
+    }
+  }
+}
 describe('ProblemDetails', () => {
   describe('constructor', () => {
     it('defaults type to "about:blank" when not provided', () => {
@@ -9,11 +29,13 @@ describe('ProblemDetails', () => {
 
     it('uses the provided type when given', () => {
       const pd = new ProblemDetails({
-        type: 'https://example.com/errors/bad-request',
+        type: 'https://waste-tracking.service.gov.uk/problems/bad-request',
         title: 'Bad Request',
         status: 400
       })
-      expect(pd.type).toBe('https://example.com/errors/bad-request')
+      expect(pd.type).toBe(
+        'https://waste-tracking.service.gov.uk/problems/bad-request'
+      )
     })
 
     it('sets title and status', () => {
@@ -73,25 +95,6 @@ describe('ProblemDetails', () => {
   })
 
   describe('fromBoom', () => {
-    function makeBoom({
-      statusCode = 400,
-      error = 'Bad Request',
-      message = 'Something went wrong',
-      data = null
-    } = {}) {
-      return {
-        message,
-        data,
-        output: {
-          statusCode,
-          payload: {
-            error,
-            message
-          }
-        }
-      }
-    }
-
     it('maps statusCode, title, and detail from the Boom error', () => {
       const boomError = makeBoom({
         statusCode: 404,
@@ -122,18 +125,22 @@ describe('ProblemDetails', () => {
     it('builds type from typeBase and a slugified error code', () => {
       const boomError = makeBoom({ error: 'Not Found' })
       const pd = ProblemDetails.fromBoom(boomError, {
-        typeBase: 'https://api.example.com/errors/'
+        typeBase: 'https://waste-tracking.service.gov.uk/problems/errors/'
       })
-      expect(pd.type).toBe('https://api.example.com/errors/not-found')
+      expect(pd.type).toBe(
+        'https://waste-tracking.service.gov.uk/problems/errors/not-found'
+      )
     })
 
     it('uses "error" as the code fallback when payload.error is missing', () => {
       const boomError = makeBoom()
       boomError.output.payload.error = undefined
       const pd = ProblemDetails.fromBoom(boomError, {
-        typeBase: 'https://api.example.com/errors/'
+        typeBase: 'https://waste-tracking.service.gov.uk/problems/errors/'
       })
-      expect(pd.type).toBe('https://api.example.com/errors/error')
+      expect(pd.type).toBe(
+        'https://waste-tracking.service.gov.uk/problems/errors/error'
+      )
     })
 
     it('sets instance when provided in opts', () => {
@@ -157,16 +164,32 @@ describe('ProblemDetails', () => {
       })
       boomError.data = {
         details: [
-          { message: '"name" is required', path: ['name'] },
-          { message: '"age" must be a number', path: ['age'] }
+          {
+            message: '"name" is required',
+            path: ['path', 'to', 'name'],
+            type: 'any.required'
+          },
+          {
+            message: '"age" must be a number',
+            path: ['path', 'to', 'age'],
+            type: 'any.number'
+          }
         ]
       }
 
       const pd = ProblemDetails.fromBoom(boomError)
 
       expect(pd.errors).toEqual([
-        { message: '"name" is required', path: ['name'] },
-        { message: '"age" must be a number', path: ['age'] }
+        {
+          message: '"name" is required',
+          pointer: '/path/to/name',
+          errorType: 'any.required'
+        },
+        {
+          message: '"age" must be a number',
+          pointer: '/path/to/age',
+          errorType: 'any.number'
+        }
       ])
     })
 
@@ -212,19 +235,38 @@ describe('ProblemDetails', () => {
   })
 
   describe('toHapiResponse', () => {
+    const responseObj = {
+      header: jest.fn().mockReturnThis(),
+      code: jest.fn().mockReturnThis(),
+      type: jest.fn().mockReturnThis()
+    }
+
     it('sends the instance as the body, sets status code and content type', () => {
       const pd = new ProblemDetails({ title: 'Not Found', status: 404 })
 
-      const responseObj = {
-        code: jest.fn().mockReturnThis(),
-        type: jest.fn().mockReturnThis()
-      }
       const h = { response: jest.fn().mockReturnValue(responseObj) }
 
       const result = pd.toHapiResponse(h)
 
       expect(h.response).toHaveBeenCalledWith(pd)
       expect(responseObj.code).toHaveBeenCalledWith(404)
+      expect(responseObj.type).toHaveBeenCalledWith('application/problem+json')
+      expect(result).toBe(responseObj)
+    })
+
+    it('sends the instance as the body, sets x-request-id header from Boom, status code and content type', () => {
+      const requestId = 'RequestID'
+      const boomError = makeBoom({ headers: { 'x-request-id': requestId } })
+
+      const pd = ProblemDetails.fromBoom(boomError)
+
+      const h = { response: jest.fn().mockReturnValue(responseObj) }
+
+      const result = pd.toHapiResponse(h)
+
+      expect(h.response).toHaveBeenCalledWith(pd)
+      expect(responseObj.header).toHaveBeenCalledWith('x-request-id', requestId)
+      expect(responseObj.code).toHaveBeenCalledWith(400)
       expect(responseObj.type).toHaveBeenCalledWith('application/problem+json')
       expect(result).toBe(responseObj)
     })

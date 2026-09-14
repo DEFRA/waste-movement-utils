@@ -47,7 +47,7 @@ describe('problem-details-error-formatter plugin', () => {
 
     expect(ProblemDetails.fromBoom).toHaveBeenCalledWith(response, {
       instance: request.path,
-      typeBase: 'https://api.example.com/errors/'
+      typeBase: 'https://waste-tracking.service.gov.uk/problems/'
     })
     expect(logger.error).toHaveBeenCalledWith(
       { title: 'Some Error', status: 400 },

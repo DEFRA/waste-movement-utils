@@ -27,7 +27,7 @@ export class ProblemDetails {
    */
   static fromBoom(boomError, opts = {}) {
     const { instance, typeBase, exposeValidation = true } = opts
-    const { statusCode, payload } = boomError.output
+    const { statusCode, payload, headers } = boomError.output
 
     const extensions = {}
 
@@ -35,13 +35,18 @@ export class ProblemDetails {
     if (exposeValidation && boomError.data?.details) {
       extensions.errors = boomError.data.details.map((d) => ({
         message: d.message,
-        path: d.path
+        pointer: `/${d.path.join('/')}`,
+        errorType: d.type
       }))
     }
 
     // Merge in any other custom data attached to the Boom error
     if (boomError.data && !boomError.data.details) {
       Object.assign(extensions, boomError.data)
+    }
+
+    if (headers['x-request-id']) {
+      extensions.requestId = headers['x-request-id']
     }
 
     const errorCode = payload.error
@@ -66,7 +71,11 @@ export class ProblemDetails {
    *   the status code set to `this.status`, and content type `application/problem+json`.
    */
   toHapiResponse(h) {
-    return h.response(this).code(this.status).type('application/problem+json')
+    return h
+      .response(this)
+      .header('x-request-id', this.requestId)
+      .code(this.status)
+      .type('application/problem+json')
   }
 
   toJSON() {
