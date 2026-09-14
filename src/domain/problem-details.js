@@ -26,8 +26,8 @@ export class ProblemDetails {
    * @param {boolean} [opts.exposeValidation=true] - include Joi/validation details if present
    */
   static fromBoom(boomError, opts = {}) {
-    const { instance, typeBase, exposeValidation = true } = opts
-    const { statusCode, payload, headers } = boomError.output
+    const { instance, typeBase, requestId, exposeValidation = true } = opts
+    const { statusCode, payload } = boomError.output
 
     const extensions = {}
 
@@ -45,8 +45,8 @@ export class ProblemDetails {
       Object.assign(extensions, boomError.data)
     }
 
-    if (headers['x-request-id']) {
-      extensions.requestId = headers['x-request-id']
+    if (requestId) {
+      extensions.requestId = requestId
     }
 
     const errorCode = payload.error
@@ -71,11 +71,15 @@ export class ProblemDetails {
    *   the status code set to `this.status`, and content type `application/problem+json`.
    */
   toHapiResponse(h) {
-    return h
-      .response(this)
-      .header('x-request-id', this.requestId)
-      .code(this.status)
-      .type('application/problem+json')
+    const response = h.response(this)
+
+    response.code(this.status).type('application/problem+json')
+
+    if (this.requestId) {
+      response.header('x-request-id', this.requestId)
+    }
+
+    return response
   }
 
   toJSON() {

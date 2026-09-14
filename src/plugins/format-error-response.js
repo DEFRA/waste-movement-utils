@@ -9,12 +9,13 @@ export const formatErrorToRFC9457Response = {
     name: 'problem-details-error-formatter',
     register: async (server) => {
       server.ext('onPreResponse', async (request, h) => {
-        const { response, logger } = request
+        const { response, logger, path, getTraceId } = request
 
         if (isNewMovementsEndpoint(request) && response.isBoom) {
           const problem = ProblemDetails.fromBoom(response, {
-            instance: request.path,
-            typeBase: 'https://waste-tracking.service.gov.uk/problems/'
+            instance: path,
+            typeBase: 'https://waste-tracking.service.gov.uk/problems/',
+            requestId: getTraceId()
           })
           logger.error(problem.toJSON(), problem.title)
 

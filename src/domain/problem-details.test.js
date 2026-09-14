@@ -20,6 +20,7 @@ function makeBoom({
     }
   }
 }
+
 describe('ProblemDetails', () => {
   describe('constructor', () => {
     it('defaults type to "about:blank" when not provided', () => {
@@ -250,15 +251,16 @@ describe('ProblemDetails', () => {
 
       expect(h.response).toHaveBeenCalledWith(pd)
       expect(responseObj.code).toHaveBeenCalledWith(404)
+      expect(responseObj.header).not.toHaveBeenCalled()
       expect(responseObj.type).toHaveBeenCalledWith('application/problem+json')
       expect(result).toBe(responseObj)
     })
 
-    it('sends the instance as the body, sets x-request-id header from Boom, status code and content type', () => {
+    it('sends the instance as the body, sets x-request-id header, status code and content type', () => {
       const requestId = 'RequestID'
-      const boomError = makeBoom({ headers: { 'x-request-id': requestId } })
+      const boomError = makeBoom()
 
-      const pd = ProblemDetails.fromBoom(boomError)
+      const pd = ProblemDetails.fromBoom(boomError, { requestId })
 
       const h = { response: jest.fn().mockReturnValue(responseObj) }
 
