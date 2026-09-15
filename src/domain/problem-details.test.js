@@ -1,25 +1,5 @@
+import { badData, badRequest, internal, notFound } from '@hapi/boom'
 import { ProblemDetails } from './problem-details.js'
-
-function makeBoom({
-  statusCode = 400,
-  error = 'Bad Request',
-  message = 'Something went wrong',
-  headers = {},
-  data = null
-} = {}) {
-  return {
-    message,
-    data,
-    output: {
-      statusCode,
-      headers,
-      payload: {
-        error,
-        message
-      }
-    }
-  }
-}
 
 describe('ProblemDetails', () => {
   describe('constructor', () => {
@@ -97,11 +77,8 @@ describe('ProblemDetails', () => {
 
   describe('fromBoom', () => {
     it('maps statusCode, title, and detail from the Boom error', () => {
-      const boomError = makeBoom({
-        statusCode: 404,
-        error: 'Not Found',
-        message: 'Widget not found'
-      })
+      const boomError = notFound('Widget not found')
+
       const pd = ProblemDetails.fromBoom(boomError)
 
       expect(pd.status).toBe(404)
@@ -109,22 +86,14 @@ describe('ProblemDetails', () => {
       expect(pd.detail).toBe('Widget not found')
     })
 
-    it('falls back to payload.message when boomError.message is falsy', () => {
-      const boomError = makeBoom({ message: '' })
-      boomError.output.payload.message = 'fallback message'
-      const pd = ProblemDetails.fromBoom(boomError)
-
-      expect(pd.detail).toBe('fallback message')
-    })
-
     it('leaves type undefined when typeBase is not provided', () => {
-      const boomError = makeBoom()
+      const boomError = badRequest('Something went wrong')
       const pd = ProblemDetails.fromBoom(boomError)
       expect(pd.type).toBe('about:blank')
     })
 
     it('builds type from typeBase and a slugified error code', () => {
-      const boomError = makeBoom({ error: 'Not Found' })
+      const boomError = notFound('')
       const pd = ProblemDetails.fromBoom(boomError, {
         typeBase: 'https://waste-tracking.service.gov.uk/problems/errors/'
       })
@@ -134,7 +103,7 @@ describe('ProblemDetails', () => {
     })
 
     it('uses "error" as the code fallback when payload.error is missing', () => {
-      const boomError = makeBoom()
+      const boomError = notFound('Not Found')
       boomError.output.payload.error = undefined
       const pd = ProblemDetails.fromBoom(boomError, {
         typeBase: 'https://waste-tracking.service.gov.uk/problems/errors/'
@@ -145,7 +114,7 @@ describe('ProblemDetails', () => {
     })
 
     it('sets instance when provided in opts', () => {
-      const boomError = makeBoom()
+      const boomError = badRequest('Something went wrong')
       const pd = ProblemDetails.fromBoom(boomError, {
         instance: '/widgets/123'
       })
@@ -153,17 +122,13 @@ describe('ProblemDetails', () => {
     })
 
     it('leaves instance unset when not provided in opts', () => {
-      const boomError = makeBoom()
+      const boomError = badRequest('Something went wrong')
       const pd = ProblemDetails.fromBoom(boomError)
       expect(pd).not.toHaveProperty('instance')
     })
 
     it('maps Joi validation details into an errors extension by default', () => {
-      const boomError = makeBoom({
-        statusCode: 422,
-        error: 'Unprocessable Entity'
-      })
-      boomError.data = {
+      const boomError = badData('Unprocessable Entity', {
         details: [
           {
             message: '"name" is required',
@@ -176,7 +141,7 @@ describe('ProblemDetails', () => {
             type: 'any.number'
           }
         ]
-      }
+      })
 
       const pd = ProblemDetails.fromBoom(boomError)
 
@@ -195,10 +160,20 @@ describe('ProblemDetails', () => {
     })
 
     it('omits validation details when exposeValidation is false', () => {
-      const boomError = makeBoom()
-      boomError.data = {
-        details: [{ message: '"name" is required', path: ['name'] }]
-      }
+      const boomError = badData('Unprocessable Entity', {
+        details: [
+          {
+            message: '"name" is required',
+            path: ['path', 'to', 'name'],
+            type: 'any.required'
+          },
+          {
+            message: '"age" must be a number',
+            path: ['path', 'to', 'age'],
+            type: 'any.number'
+          }
+        ]
+      })
 
       const pd = ProblemDetails.fromBoom(boomError, { exposeValidation: false })
 
@@ -206,8 +181,9 @@ describe('ProblemDetails', () => {
     })
 
     it('merges other boomError.data fields when there are no validation details', () => {
-      const boomError = makeBoom()
-      boomError.data = { customField: 'customValue' }
+      const boomError = badData('Unprocessable Entity', {
+        customField: 'customValue'
+      })
 
       const pd = ProblemDetails.fromBoom(boomError)
 
@@ -216,8 +192,7 @@ describe('ProblemDetails', () => {
     })
 
     it('does not merge extra data when boomError.data is null', () => {
-      const boomError = makeBoom()
-      boomError.data = null
+      const boomError = badData('Unprocessable Entity', null)
 
       const pd = ProblemDetails.fromBoom(boomError)
 
@@ -226,12 +201,19 @@ describe('ProblemDetails', () => {
     })
 
     it('does not merge extra data when boomError.data is undefined', () => {
-      const boomError = makeBoom()
-      delete boomError.data
+      const boomError = badData('Unprocessable Entity')
 
       const pd = ProblemDetails.fromBoom(boomError)
 
       expect(pd).not.toHaveProperty('errors')
+    })
+
+    it('keeps internal error messages private', async () => {
+      const boomError = internal('database password=secret')
+
+      const pd = ProblemDetails.fromBoom(boomError)
+
+      expect(JSON.stringify(pd)).not.toContain('password=secret')
     })
   })
 
@@ -258,7 +240,8 @@ describe('ProblemDetails', () => {
 
     it('sends the instance as the body, sets x-request-id header, status code and content type', () => {
       const requestId = 'RequestID'
-      const boomError = makeBoom()
+
+      const boomError = badRequest('Something went wrong')
 
       const pd = ProblemDetails.fromBoom(boomError, { requestId })
 

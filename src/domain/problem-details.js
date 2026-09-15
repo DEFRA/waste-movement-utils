@@ -28,7 +28,6 @@ export class ProblemDetails {
   static fromBoom(boomError, opts = {}) {
     const { instance, typeBase, requestId, exposeValidation = true } = opts
     const { statusCode, payload } = boomError.output
-
     const extensions = {}
 
     // Hapi's Joi validation errors attach details to boomError.data
@@ -57,7 +56,7 @@ export class ProblemDetails {
       type: typeBase ? `${typeBase}${errorCode}` : undefined,
       title: payload.error,
       status: statusCode,
-      detail: boomError.message || payload.message,
+      detail: statusCode !== 500 && boomError.message,
       instance,
       extensions
     })
