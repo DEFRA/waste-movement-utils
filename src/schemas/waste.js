@@ -12,6 +12,7 @@ import {
   WASTE_ERRORS
 } from '../constants/validation-error-messages.js'
 import { validSourceOfComponents } from '../constants/source-of-components.js'
+import { concentrationOperators } from '../constants/concentration-operators.js'
 
 const MAX_EWC_CODES_COUNT = 5
 
@@ -159,7 +160,21 @@ const sourceOfComponentsSchema = Joi.string().valid(
   ...Object.values(validSourceOfComponents)
 )
 
-const concentrationSchema = () => Joi.number().strict().positive().allow(null)
+// A concentration value must accompany an operator: ">" on its own does not
+// tell a regulator which threshold was exceeded. Without an operator the value
+// stays optional and nullable, as it has always been.
+const concentrationSchema = () =>
+  Joi.number()
+    .strict()
+    .positive()
+    .when('concentrationOperator', {
+      is: Joi.exist(),
+      then: Joi.required(),
+      otherwise: Joi.allow(null)
+    })
+
+const concentrationOperatorSchema = (...operators) =>
+  Joi.string().valid(...operators)
 
 const popComponentSchema = Joi.object({
   code: Joi.string()
@@ -175,7 +190,13 @@ const popComponentSchema = Joi.object({
     .messages({
       'InvalidValue.popCode': POPS_ERRORS.POP_CODE_INVALID
     }),
-  concentration: concentrationSchema()
+  concentration: concentrationSchema(),
+  // Regulators accept "above" or "below" a threshold for POPs, but only
+  // "above" for hazardous waste, so the two schemas deliberately differ.
+  concentrationOperator: concentrationOperatorSchema(
+    concentrationOperators.GREATER_THAN,
+    concentrationOperators.LESS_THAN
+  )
 })
 
 const popsSchema = Joi.object({
@@ -211,7 +232,10 @@ const deduplicateHazCodes = (value) => {
 
 const hazardousComponentSchema = Joi.object({
   name: Joi.string().empty('').empty(null).required(),
-  concentration: concentrationSchema()
+  concentration: concentrationSchema(),
+  concentrationOperator: concentrationOperatorSchema(
+    concentrationOperators.GREATER_THAN
+  )
 })
 
 const hazardousSchema = Joi.object({
