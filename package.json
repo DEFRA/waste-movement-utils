@@ -1,6 +1,6 @@
 {
   "name": "@defra/waste-movement-utils",
-  "version": "1.8.0",
+  "version": "1.9.0",
   "description": "waste-movement-utils",
   "repository": {
     "url": "https://github.com/DEFRA/waste-movement-utils"
@@ -23,6 +23,7 @@
   "license": "OGL-UK-3.0",
   "devDependencies": {
     "@babel/preset-env": "^7.29.7",
+    "@hapi/boom": "^10.0.1",
     "babel-jest": "^30.4.1",
     "babel-plugin-transform-import-meta": "^2.3.3",
     "eslint": "^10.8.0",
@@ -33,7 +34,7 @@
   },
   "dependencies": {
     "@hapi/basic": "^7.0.2",
-    "joi": "18.2.1",
+    "joi": "^18.2.9",
     "uuid": "^14.0.0"
   },
   "overrides": {
