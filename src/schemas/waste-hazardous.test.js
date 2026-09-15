@@ -3,6 +3,7 @@ import {
   sourceOfComponentsNotProvided,
   validSourceOfComponents
 } from '../constants/source-of-components.js'
+import { popsAndHazardousConcentrationOperatorTests } from '../test/common/pops-and-hazardous-components/pops-and-hazardous-concentration-operator-tests.js'
 import { popsAndHazardousComponentsErrorTests } from '../test/common/pops-and-hazardous-components/pops-and-hazardous-components-error-tests.js'
 import { receiveMovementRequestSchema } from './receipt.js'
 import { createTestPayload } from './test-helpers/waste-test-helpers.js'
@@ -263,4 +264,10 @@ popsAndHazardousComponentsErrorTests({
   createMovementRequest,
   popsOrHazardous: 'Hazardous',
   overrides: { hazCodes: [validHazCodes[0]] }
+})
+
+popsAndHazardousConcentrationOperatorTests({
+  receiveMovementRequestSchema,
+  createMovementRequest,
+  popsOrHazardous: 'Hazardous'
 })
