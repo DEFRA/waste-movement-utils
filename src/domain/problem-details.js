@@ -52,11 +52,6 @@ export class ProblemDetails {
       }))
     }
 
-    // Merge in any other custom data attached to the Boom error
-    if (boomError.data && !boomError.data.details) {
-      Object.assign(extensions, boomError.data)
-    }
-
     if (requestId) {
       extensions.requestId = requestId
     }

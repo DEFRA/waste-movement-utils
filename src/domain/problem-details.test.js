@@ -183,14 +183,14 @@ describe('ProblemDetails', () => {
       expect(pd).not.toHaveProperty('errors')
     })
 
-    it('merges other boomError.data fields when there are no validation details', () => {
+    it('doesnt merge other boomError.data fields when there are no validation details', () => {
       const boomError = badData('Unprocessable Entity', {
         customField: 'customValue'
       })
 
       const pd = ProblemDetails.fromBoom(boomError)
 
-      expect(pd.customField).toBe('customValue')
+      expect(pd).not.toHaveProperty('customValue')
       expect(pd).not.toHaveProperty('errors')
     })
 
