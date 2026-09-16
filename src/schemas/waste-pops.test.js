@@ -1,4 +1,5 @@
 import { isValidPopCode, validPopNames } from '../constants/pop-names.js'
+import { popsAndHazardousConcentrationOperatorTests } from '../test/common/pops-and-hazardous-components/pops-and-hazardous-concentration-operator-tests.js'
 import { popsAndHazardousComponentsErrorTests } from '../test/common/pops-and-hazardous-components/pops-and-hazardous-components-error-tests.js'
 import { receiveMovementRequestSchema } from './receipt.js'
 import { createTestPayload } from './test-helpers/waste-test-helpers.js'
@@ -60,6 +61,12 @@ describe('Receipt Schema Validation - POPs', () => {
   })
 
   popsAndHazardousComponentsErrorTests({
+    receiveMovementRequestSchema,
+    createMovementRequest,
+    popsOrHazardous: 'POPs'
+  })
+
+  popsAndHazardousConcentrationOperatorTests({
     receiveMovementRequestSchema,
     createMovementRequest,
     popsOrHazardous: 'POPs'
