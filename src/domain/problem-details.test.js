@@ -1,4 +1,10 @@
-import { badData, badRequest, internal, notFound } from '@hapi/boom'
+import {
+  badData,
+  badRequest,
+  internal,
+  notFound,
+  unauthorized
+} from '@hapi/boom'
 import { ProblemDetails } from './problem-details.js'
 
 describe('ProblemDetails', () => {
@@ -254,6 +260,24 @@ describe('ProblemDetails', () => {
       expect(responseObj.code).toHaveBeenCalledWith(400)
       expect(responseObj.type).toHaveBeenCalledWith('application/problem+json')
       expect(result).toBe(responseObj)
+    })
+
+    it('preserves headers from incoming response', () => {
+      const boomError = unauthorized('Token expired', 'Bearer')
+
+      const pd = ProblemDetails.fromBoom(boomError)
+      const h = { response: jest.fn().mockReturnValue(responseObj) }
+
+      pd.toHapiResponse(h)
+
+      expect(h.response).toHaveBeenCalledWith(pd)
+      expect(responseObj.code).toHaveBeenCalledWith(401)
+      expect(responseObj.header).toHaveBeenCalledTimes(1)
+      expect(responseObj.header).toHaveBeenCalledWith(
+        'WWW-Authenticate',
+        'Bearer error="Token expired"'
+      )
+      expect(responseObj.type).toHaveBeenCalledWith('application/problem+json')
     })
   })
 
