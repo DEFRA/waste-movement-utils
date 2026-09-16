@@ -57,7 +57,6 @@ describe('problem-details-error-formatter plugin', () => {
     expect(logger.error).toHaveBeenCalledWith(
       {
         instance: '/beta-1/widgets',
-        status: '404',
         title: 'Some Error',
         type: 'https://waste-tracking.service.gov.uk/problems/some-error'
       },
@@ -95,7 +94,6 @@ describe('problem-details-error-formatter plugin', () => {
       {
         instance: '/beta-1/widgets',
         requestId: 'Trace-Id',
-        status: '404',
         title: 'Some Error',
         type: 'https://waste-tracking.service.gov.uk/problems/some-error'
       },

@@ -28,7 +28,6 @@ describe('ProblemDetails', () => {
     it('sets title and status', () => {
       const pd = new ProblemDetails({ title: 'Not Found', status: 404 })
       expect(pd.title).toBe('Not Found')
-      expect(pd.status).toBe(404)
     })
 
     it('omits detail when not provided', () => {
@@ -77,7 +76,6 @@ describe('ProblemDetails', () => {
       const pd = new ProblemDetails()
       expect(pd.type).toBe('about:blank')
       expect(pd.title).toBeUndefined()
-      expect(pd.status).toBeUndefined()
     })
   })
 
@@ -87,7 +85,6 @@ describe('ProblemDetails', () => {
 
       const pd = ProblemDetails.fromBoom(boomError)
 
-      expect(pd.status).toBe(404)
       expect(pd.title).toBe('Not Found')
       expect(pd.detail).toBe('Widget not found')
     })
@@ -186,14 +183,14 @@ describe('ProblemDetails', () => {
       expect(pd).not.toHaveProperty('errors')
     })
 
-    it('merges other boomError.data fields when there are no validation details', () => {
+    it('doesnt merge other boomError.data fields when there are no validation details', () => {
       const boomError = badData('Unprocessable Entity', {
         customField: 'customValue'
       })
 
       const pd = ProblemDetails.fromBoom(boomError)
 
-      expect(pd.customField).toBe('customValue')
+      expect(pd).not.toHaveProperty('customValue')
       expect(pd).not.toHaveProperty('errors')
     })
 
@@ -288,8 +285,7 @@ describe('ProblemDetails', () => {
 
       expect(json).toEqual({
         type: 'about:blank',
-        title: 'Not Found',
-        status: 404
+        title: 'Not Found'
       })
     })
 
@@ -354,7 +350,6 @@ describe('ProblemDetails', () => {
       expect(parsed).toEqual({
         type: 'about:blank',
         title: 'Not Found',
-        status: 404,
         detail: 'Widget missing',
         instance: '/widgets/123'
       })

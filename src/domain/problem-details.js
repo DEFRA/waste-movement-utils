@@ -11,6 +11,7 @@ export class ProblemDetails {
    */
 
   #headers
+  #status
 
   constructor({
     type,
@@ -23,10 +24,10 @@ export class ProblemDetails {
   } = {}) {
     this.type = type || 'about:blank'
     this.title = title
-    this.status = status
     if (detail) this.detail = detail
     if (instance) this.instance = instance
     Object.assign(this, extensions)
+    this.#status = status
     this.#headers = headers
   }
 
@@ -49,11 +50,6 @@ export class ProblemDetails {
         pointer: `/${d.path.join('/')}`,
         errorType: d.type
       }))
-    }
-
-    // Merge in any other custom data attached to the Boom error
-    if (boomError.data && !boomError.data.details) {
-      Object.assign(extensions, boomError.data)
     }
 
     if (requestId) {
@@ -85,7 +81,7 @@ export class ProblemDetails {
   toHapiResponse(h) {
     const response = h
       .response(this)
-      .code(this.status)
+      .code(this.#status)
       .type('application/problem+json')
 
     for (const [key, value] of Object.entries(this.#headers)) {
@@ -103,11 +99,10 @@ export class ProblemDetails {
   }
 
   toJSON() {
-    const { type, title, status, detail, instance, ...rest } = this
+    const { type, title, detail, instance, ...rest } = this
     return {
       type,
       title,
-      status,
       ...(detail && { detail }),
       ...(instance && { instance }),
       ...rest
