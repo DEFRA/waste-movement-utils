@@ -1,11 +1,25 @@
+import Joi from 'joi'
 import {
   badData,
   badRequest,
+  boomify,
   internal,
   notFound,
   unauthorized
 } from '@hapi/boom'
 import { ProblemDetails } from './problem-details.js'
+
+const buildHapiStyleValidationBoom = (schema, payload) => {
+  const { error: joiError } = schema.validate(payload, { abortEarly: false })
+
+  if (!joiError) {
+    throw new Error('Test setup error: payload was valid, expected a Joi error')
+  }
+
+  const boomError = boomify(joiError, { statusCode: 400 })
+
+  return boomError
+}
 
 describe('ProblemDetails', () => {
   describe('constructor', () => {
@@ -130,7 +144,7 @@ describe('ProblemDetails', () => {
       expect(pd).not.toHaveProperty('instance')
     })
 
-    it('maps Joi validation details into an errors extension by default', () => {
+    it('maps badData details into an errors extension by default', () => {
       const boomError = badData('Unprocessable Entity', {
         details: [
           {
@@ -162,7 +176,7 @@ describe('ProblemDetails', () => {
       ])
     })
 
-    it('omits validation details when exposeValidation is false', () => {
+    it('omits badData details when exposeValidation is false', () => {
       const boomError = badData('Unprocessable Entity', {
         details: [
           {
@@ -183,6 +197,72 @@ describe('ProblemDetails', () => {
       expect(pd).not.toHaveProperty('errors')
     })
 
+    it('maps Joi validation details into an errors extension by default', () => {
+      const schema = Joi.object({
+        person: {
+          name: Joi.string().required(),
+          age: Joi.number().required()
+        }
+      })
+      const boomError = buildHapiStyleValidationBoom(schema, {
+        person: { age: 'old' }
+      })
+
+      const pd = ProblemDetails.fromBoom(boomError)
+
+      expect(pd.errors).toEqual([
+        {
+          message: '"person.name" is required',
+          pointer: '/person/name',
+          errorType: 'any.required'
+        },
+        {
+          message: '"person.age" must be a number',
+          pointer: '/person/age',
+          errorType: 'number.base'
+        }
+      ])
+    })
+
+    it('omits validation details when exposeValidation is false', () => {
+      const schema = Joi.object({
+        person: {
+          name: Joi.string().required(),
+          age: Joi.number().required()
+        }
+      })
+      const boomError = buildHapiStyleValidationBoom(schema, {
+        person: { age: 'old' }
+      })
+
+      const pd = ProblemDetails.fromBoom(boomError, {
+        exposeValidation: false
+      })
+
+      expect(pd).not.toHaveProperty('errors')
+    })
+
+    it('ignores malformed validation details', () => {
+      const boomError = badData('Unprocessable Entity', {
+        details: [{ message: 'Missing a path and error type' }]
+      })
+
+      const pd = ProblemDetails.fromBoom(boomError)
+
+      expect(pd).not.toHaveProperty('errors')
+    })
+
+    it('returns boomified errors shape', () => {
+      const boomError = boomify(new Error('A standard Error Boomified'))
+
+      const pd = ProblemDetails.fromBoom(boomError)
+
+      expect(pd).toEqual({
+        type: 'about:blank',
+        title: 'Internal Server Error'
+      })
+    })
+
     it('doesnt merge other boomError.data fields when there are no validation details', () => {
       const boomError = badData('Unprocessable Entity', {
         customField: 'customValue'
@@ -190,7 +270,7 @@ describe('ProblemDetails', () => {
 
       const pd = ProblemDetails.fromBoom(boomError)
 
-      expect(pd).not.toHaveProperty('customValue')
+      expect(pd).not.toHaveProperty('customField')
       expect(pd).not.toHaveProperty('errors')
     })
 

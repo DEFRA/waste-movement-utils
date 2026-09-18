@@ -1,3 +1,18 @@
+const isValidationDetail = (detail) =>
+  typeof detail?.message === 'string' &&
+  Array.isArray(detail.path) &&
+  typeof detail.type === 'string'
+
+const getValidationDetails = (boomError) => {
+  const details = boomError.details ?? boomError.data?.details
+
+  if (Array.isArray(details) && details.every(isValidationDetail)) {
+    return details
+  }
+
+  return null
+}
+
 export class ProblemDetails {
   /**
    * @param {object} opts
@@ -43,9 +58,10 @@ export class ProblemDetails {
     const { instance, typeBase, requestId, exposeValidation = true } = opts
     const { statusCode, payload, headers } = boomError.output
     const extensions = {}
-    // Hapi's Joi validation errors attach details to boomError.data
-    if (exposeValidation && boomError.data?.details) {
-      extensions.errors = boomError.data.details.map((d) => ({
+    const validationDetails = getValidationDetails(boomError)
+
+    if (exposeValidation && validationDetails) {
+      extensions.errors = validationDetails.map((d) => ({
         message: d.message,
         pointer: `/${d.path.join('/')}`,
         errorType: d.type
