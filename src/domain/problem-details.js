@@ -13,6 +13,9 @@ const getValidationDetails = (boomError) => {
   return null
 }
 
+const summarizeValidationDetails = (validationDetails) =>
+  `${validationDetails.length} validation error${validationDetails.length === 1 ? '' : 's'} occurred`
+
 export class ProblemDetails {
   /**
    * @param {object} opts
@@ -80,7 +83,11 @@ export class ProblemDetails {
       type: typeBase ? `${typeBase}${errorCode}` : undefined,
       title: payload.error,
       status: statusCode,
-      detail: statusCode !== 500 && boomError.message,
+      detail:
+        statusCode !== 500 &&
+        (validationDetails
+          ? summarizeValidationDetails(validationDetails)
+          : boomError.message),
       instance,
       extensions,
       headers

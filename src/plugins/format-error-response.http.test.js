@@ -123,8 +123,7 @@ describe('format-error-response plugin over real HTTP responses', () => {
       expect(body).toEqual({
         type: `${typeBase}bad-request`,
         title: 'Bad Request',
-        detail:
-          '"apiCode" is required. "user.name" is required. "user.age" is required',
+        detail: '3 validation errors occurred',
         instance: '/movements/movement-123/collect',
         errors: [
           {

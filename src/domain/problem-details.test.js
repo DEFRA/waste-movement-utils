@@ -174,6 +174,23 @@ describe('ProblemDetails', () => {
           errorType: 'any.number'
         }
       ])
+      expect(pd.detail).toBe('2 validation errors occurred')
+    })
+
+    it('summarizes a single validation error without pluralizing', () => {
+      const boomError = badData('Unprocessable Entity', {
+        details: [
+          {
+            message: '"name" is required',
+            path: ['path', 'to', 'name'],
+            type: 'any.required'
+          }
+        ]
+      })
+
+      const pd = ProblemDetails.fromBoom(boomError)
+
+      expect(pd.detail).toBe('1 validation error occurred')
     })
 
     it('omits badData details when exposeValidation is false', () => {
@@ -195,6 +212,7 @@ describe('ProblemDetails', () => {
       const pd = ProblemDetails.fromBoom(boomError, { exposeValidation: false })
 
       expect(pd).not.toHaveProperty('errors')
+      expect(pd.detail).toBe('2 validation errors occurred')
     })
 
     it('maps Joi validation details into an errors extension by default', () => {
@@ -222,6 +240,7 @@ describe('ProblemDetails', () => {
           errorType: 'number.base'
         }
       ])
+      expect(pd.detail).toBe('2 validation errors occurred')
     })
 
     it('omits validation details when exposeValidation is false', () => {
