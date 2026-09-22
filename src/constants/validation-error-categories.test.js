@@ -1,10 +1,23 @@
 import {
   ERROR_CATEGORIES,
+  ERROR_TYPE,
   getErrorCategory,
   JOI_TYPE_TO_CATEGORY
 } from './validation-error-categories'
 
 describe('validation-error-categories', () => {
+  describe('ERROR_TYPE', () => {
+    it('exposes every category getErrorCategory can return', () => {
+      const possibleCategories = new Set([
+        ...Object.values(JOI_TYPE_TO_CATEGORY),
+        ...ERROR_CATEGORIES,
+        'UnexpectedError'
+      ])
+
+      expect(new Set(Object.values(ERROR_TYPE))).toEqual(possibleCategories)
+    })
+  })
+
   describe('#getErrorCategory', () => {
     it('should return the correct error category for a joi error type', () => {
       const [joiError, errorCategory] = Object.entries(JOI_TYPE_TO_CATEGORY)[0]
