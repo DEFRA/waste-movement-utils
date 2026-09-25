@@ -13,7 +13,9 @@ export default {
   coveragePathIgnorePatterns: ['<rootDir>/node_modules/', 'index.js'],
   coverageDirectory: '<rootDir>/coverage',
   transform: {
-    '^.+\\.js$': 'babel-jest'
+    '^.+\\.(js|mjs)$': 'babel-jest'
   },
-  transformIgnorePatterns: [`node_modules/(?!${['uuid'].join('|')}/)`]
+  transformIgnorePatterns: [
+    `node_modules/(?!${['uuid', '@joi/date'].join('|')}/)`
+  ]
 }
