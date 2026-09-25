@@ -76,6 +76,17 @@ describe('receiveMovementRequestSchema - otherReferencesForMovement validation',
 
       expect(error).toBeUndefined()
     })
+
+    it('should accept submittingOrganisation with name and isLocalAuthority', () => {
+      const payload = createSubmittingOrganisationRequest()
+      payload.submittingOrganisation.defraCustomerOrganisationName =
+        'Acme Waste Ltd'
+      payload.submittingOrganisation.defraCustomerOrganisationIsLocalAuthority = false
+
+      const { error } = receiveMovementRequestSchema.validate(payload)
+
+      expect(error).toBeUndefined()
+    })
   })
 
   describe('invalid payloads', () => {
@@ -251,6 +262,29 @@ describe('receiveMovementRequestSchema - otherReferencesForMovement validation',
       expect(error).toBeDefined()
       expect(error.message).toContain(
         '"submittingOrganisation.defraCustomerOrganisationId" is required'
+      )
+    })
+
+    it('should reject when defraCustomerOrganisationName is not a string', () => {
+      const payload = createSubmittingOrganisationRequest()
+      payload.submittingOrganisation.defraCustomerOrganisationName = 123
+
+      const { error } = receiveMovementRequestSchema.validate(payload)
+      expect(error).toBeDefined()
+      expect(error.message).toContain(
+        '"submittingOrganisation.defraCustomerOrganisationName" must be a string'
+      )
+    })
+
+    it('should reject when defraCustomerOrganisationIsLocalAuthority is not a boolean', () => {
+      const payload = createSubmittingOrganisationRequest()
+      payload.submittingOrganisation.defraCustomerOrganisationIsLocalAuthority =
+        'true'
+
+      const { error } = receiveMovementRequestSchema.validate(payload)
+      expect(error).toBeDefined()
+      expect(error.message).toContain(
+        '"submittingOrganisation.defraCustomerOrganisationIsLocalAuthority" must be a boolean'
       )
     })
 
