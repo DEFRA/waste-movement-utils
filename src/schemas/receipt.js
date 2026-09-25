@@ -1,4 +1,5 @@
-import Joi from 'joi'
+import BaseJoi from 'joi'
+import { JoiDate } from '@joi/date'
 import {
   UK_POSTCODE_REGEX,
   ALL_SITE_AUTHORISATION_NUMBER_REGEXES
@@ -6,7 +7,8 @@ import {
 import {
   ADDRESS_ERRORS,
   CONSIGNMENT_ERRORS,
-  AUTHORISATION_ERRORS
+  AUTHORISATION_ERRORS,
+  DATE_ERRORS
 } from '../constants/validation-error-messages.js'
 import { NO_CONSIGNMENT_REASONS } from '../constants/no-consignment-reasons.js'
 import {
@@ -20,6 +22,8 @@ import { brokerOrDealerSchema } from './brokerOrDealer.js'
 
 const MIN_STRING_LENGTH = 1
 const LONG_STRING_MAX_LENGTH = 5000
+
+const Joi = BaseJoi.extend(JoiDate)
 
 /**
  * Determines if a site authorisation number is valid
@@ -73,7 +77,17 @@ export const receiveMovementRequestSchema = Joi.object({
   submittingOrganisation: Joi.object({
     defraCustomerOrganisationId: Joi.string().required()
   }),
-  dateTimeReceived: Joi.date().iso().required(),
+  dateTimeReceived: Joi.date()
+    .format([
+      'YYYY-MM-DDTHH:mm:ss[Z]', // 2025-08-29T15:24:00Z
+      'YYYY-MM-DDTHH:mm:ss.SSS[Z]', // 2025-08-29T15:24:00.000Z
+      'YYYY-MM-DDTHH:mm:ss+01:00', // 2025-08-29T15:24:00+01:00
+      'YYYY-MM-DDTHH:mm:ss.SSS+01:00' // 2025-08-29T15:24:00.000+01:00
+    ])
+    .required()
+    .messages({
+      'date.format': DATE_ERRORS.INVALID
+    }),
   hazardousWasteConsignmentCode: hazardousWasteConsignmentCodeSchema,
   reasonForNoConsignmentCode: Joi.string().allow(null, ''),
   yourUniqueReference: Joi.string(),

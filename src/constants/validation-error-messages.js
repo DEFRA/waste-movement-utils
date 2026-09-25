@@ -75,3 +75,8 @@ export const AUTHORISATION_ERRORS = {
 export const PRODUCTION_APPROVAL_TEST_ERRORS = {
   SCENARIO_ID_UNIQUE: '{:#label} contains a duplicate scenarioId value'
 }
+
+export const DATE_ERRORS = {
+  INVALID:
+    '{{ #label }} must be a valid UTC (2025-09-15T12:12:28Z) or BST (2025-09-15T13:12:28+01:00) ISO datetime'
+}
