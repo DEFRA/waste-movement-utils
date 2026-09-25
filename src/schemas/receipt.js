@@ -75,7 +75,9 @@ const receiptSchema = Joi.object({
 export const receiveMovementRequestSchema = Joi.object({
   apiCode: Joi.string().uuid(),
   submittingOrganisation: Joi.object({
-    defraCustomerOrganisationId: Joi.string().required()
+    defraCustomerOrganisationId: Joi.string().required(),
+    defraCustomerOrganisationName: Joi.string(),
+    defraCustomerOrganisationIsLocalAuthority: Joi.boolean().strict()
   }),
   dateTimeReceived: Joi.date()
     .format([
