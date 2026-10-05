@@ -1,6 +1,6 @@
 {
   "name": "@defra/waste-movement-utils",
-  "version": "1.13.0",
+  "version": "1.14.0",
   "description": "waste-movement-utils",
   "repository": {
     "url": "https://github.com/DEFRA/waste-movement-utils"
@@ -27,7 +27,7 @@
     "@hapi/hapi": "^21.4.10",
     "babel-jest": "^30.4.1",
     "babel-plugin-transform-import-meta": "^2.3.3",
-    "eslint": "^10.8.0",
+    "eslint": "^9.39.2",
     "husky": "^9.1.7",
     "jest": "^30.4.2",
     "neostandard": "^0.13.0",
