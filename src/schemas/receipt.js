@@ -74,6 +74,10 @@ const receiptSchema = Joi.object({
 
 export const receiveMovementRequestSchema = Joi.object({
   apiCode: Joi.string().uuid(),
+  softwareProvider: Joi.object({
+    name: Joi.string(),
+    id: Joi.string()
+  }),
   submittingOrganisation: Joi.object({
     defraCustomerOrganisationId: Joi.string().required(),
     defraCustomerOrganisationName: Joi.string(),
