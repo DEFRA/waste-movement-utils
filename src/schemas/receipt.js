@@ -60,7 +60,7 @@ const checkDateTimeReceived = (value, helpers) => {
 
   // Reject impossible dates (e.g. 30 February) rather than rolling them over.
   // setUTCFullYear, unlike Date.UTC, doesn't map years 0-99 to the 1900s
-  const [, year, month, day] = match.map(Number)
+  const [_, year, month, day] = match.map(Number)
   const calendar = new Date(0)
   calendar.setUTCFullYear(year, month - 1, day)
 
