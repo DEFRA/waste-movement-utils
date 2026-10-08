@@ -173,8 +173,12 @@ const concentrationSchema = () =>
       otherwise: Joi.allow(null)
     })
 
+// A null operator is treated as no operator at all, so that a component with
+// no measurement can be sent with both fields explicitly null.
 const concentrationOperatorSchema = (...operators) =>
-  Joi.string().valid(...operators)
+  Joi.string()
+    .empty(null)
+    .valid(...operators)
 
 const popComponentSchema = Joi.object({
   code: Joi.string()
