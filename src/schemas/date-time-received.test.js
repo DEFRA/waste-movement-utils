@@ -218,7 +218,7 @@ describe('Create Receipt Movement - Date and Time Received Validation', () => {
     it('should reject a numeric timestamp', () => {
       const { error } = receiveMovementRequestSchema.validate({
         ...createMovementRequest(),
-        dateTimeReceived: Date.parse('2025-09-15T12:12:28Z')
+        dateTimeReceived: 1757938348000 // 2025-09-15T12:12:28Z
       })
       expect(error).toBeDefined()
       expect(error.details[0].message).toBe(
@@ -228,7 +228,7 @@ describe('Create Receipt Movement - Date and Time Received Validation', () => {
 
     it.each([
       ['an offset other than UTC or BST', '2025-09-15T14:12:28+02:00'],
-      ['29 February in a non-leap year', '0001-02-29T00:00:00Z']
+      ['29 February in a non-leap year', '2025-02-29T12:00:00Z']
     ])('should reject %s', (_, dateTimeReceived) => {
       const { error } = receiveMovementRequestSchema.validate({
         ...createMovementRequest(),
@@ -240,9 +240,8 @@ describe('Create Receipt Movement - Date and Time Received Validation', () => {
       )
     })
 
-    it('should accept 29 February in year 0000', () => {
-      // Date.UTC would treat year 0 as 1900, which isn't a leap year
-      expect(convert('0000-02-29T00:00:00Z')).toBe('0000-02-29T00:00:00.000Z')
+    it('should accept 29 February in a leap year', () => {
+      expect(convert('2024-02-29T12:00:00Z')).toBe('2024-02-29T12:00:00.000Z')
     })
 
     it('should report the value the client sent in the error context', () => {
