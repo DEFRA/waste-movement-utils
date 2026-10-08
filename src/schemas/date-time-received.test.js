@@ -147,4 +147,65 @@ describe('Create Receipt Movement - Date and Time Received Validation', () => {
       )
     })
   })
+
+  describe('Conversion of dateTimeReceived to UTC', () => {
+    const convert = (dateTimeReceived) => {
+      const { error, value } = receiveMovementRequestSchema.validate({
+        ...createMovementRequest(),
+        dateTimeReceived
+      })
+      expect(error).toBeUndefined()
+      return value.dateTimeReceived.toISOString()
+    }
+
+    it.each([
+      ['2025-09-15T12:12:28Z', '2025-09-15T12:12:28.000Z'],
+      ['2025-09-15T12:12:28.000Z', '2025-09-15T12:12:28.000Z'],
+      ['2025-09-15T13:12:28+01:00', '2025-09-15T12:12:28.000Z'],
+      ['2025-09-15T13:12:28.000+01:00', '2025-09-15T12:12:28.000Z'],
+      ['2025-09-15T00:30:00+01:00', '2025-09-14T23:30:00.000Z']
+    ])('should store %s as %s', (dateTimeReceived, expected) => {
+      expect(convert(dateTimeReceived)).toBe(expected)
+    })
+
+    it('should not depend on the timezone of the server', () => {
+      const originalTimezone = process.env.TZ
+      try {
+        for (const timezone of ['UTC', 'Europe/London', 'America/New_York']) {
+          process.env.TZ = timezone
+          expect(convert('2025-09-15T12:12:28Z')).toBe(
+            '2025-09-15T12:12:28.000Z'
+          )
+          expect(convert('2025-09-15T13:12:28+01:00')).toBe(
+            '2025-09-15T12:12:28.000Z'
+          )
+        }
+      } finally {
+        process.env.TZ = originalTimezone
+      }
+    })
+
+    it('should be described as an ISO date-time with an example, for the API docs', () => {
+      // hapi-swagger turns Joi.date().iso() into `format: date-time`
+      const description = receiveMovementRequestSchema
+        .extract('dateTimeReceived')
+        .describe()
+
+      expect(description.type).toBe('date')
+      expect(description.flags.format).toBe('iso')
+      expect(description.flags.description).toContain('UTC')
+      expect(description.examples).toEqual(['2025-09-15T13:12:28+01:00'])
+    })
+
+    it('should reject an impossible date rather than rolling it over', () => {
+      const { error } = receiveMovementRequestSchema.validate({
+        ...createMovementRequest(),
+        dateTimeReceived: '2025-02-30T12:00:00Z'
+      })
+      expect(error).toBeDefined()
+      expect(error.details[0].message).toBe(
+        '"dateTimeReceived" must be a valid UTC (2025-09-15T12:12:28Z) or BST (2025-09-15T13:12:28+01:00) ISO datetime'
+      )
+    })
+  })
 })

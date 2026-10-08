@@ -1,5 +1,4 @@
-import BaseJoi from 'joi'
-import { JoiDate } from '@joi/date'
+import Joi from 'joi'
 import {
   UK_POSTCODE_REGEX,
   ALL_SITE_AUTHORISATION_NUMBER_REGEXES
@@ -23,7 +22,39 @@ import { brokerOrDealerSchema } from './brokerOrDealer.js'
 const MIN_STRING_LENGTH = 1
 const LONG_STRING_MAX_LENGTH = 5000
 
-const Joi = BaseJoi.extend(JoiDate)
+// A date and time, with the offset for UTC (Z) or BST (+01:00)
+const DATE_TIME_RECEIVED_REGEX =
+  /^(\d{4})-(\d{2})-(\d{2})T\d{2}:\d{2}:\d{2}(\.\d{3})?(Z|\+01:00)$/
+
+/**
+ * Narrows Joi.date().iso() to the dateTimeReceived contract. iso() parses
+ * offsets correctly and documents the field as `format: date-time`, but on
+ * its own it also accepts a date with no time, a time with no offset (read in
+ * the server's timezone), any offset, and impossible dates such as 30 February
+ * (rolled over to March). This checks the original string so those are
+ * rejected.
+ * @param {Date} value - The Date parsed by Joi.date().iso()
+ * @param {Object} helpers - Joi custom validation helpers
+ * @returns {Date|Object} The Date, or a Joi error
+ */
+const checkDateTimeReceived = (value, helpers) => {
+  const match =
+    typeof helpers.original === 'string' &&
+    helpers.original.match(DATE_TIME_RECEIVED_REGEX)
+
+  if (!match) {
+    return helpers.error('any.invalid')
+  }
+
+  const [, year, month, day] = match
+  const calendarDay = new Date(Date.UTC(year, month - 1, day)).getUTCDate()
+
+  if (calendarDay !== Number(day)) {
+    return helpers.error('any.invalid')
+  }
+
+  return value
+}
 
 /**
  * Determines if a site authorisation number is valid
@@ -84,15 +115,17 @@ export const receiveMovementRequestSchema = Joi.object({
     defraCustomerOrganisationIsLocalAuthority: Joi.boolean().strict()
   }),
   dateTimeReceived: Joi.date()
-    .format([
-      'YYYY-MM-DDTHH:mm:ss[Z]', // 2025-08-29T15:24:00Z
-      'YYYY-MM-DDTHH:mm:ss.SSS[Z]', // 2025-08-29T15:24:00.000Z
-      'YYYY-MM-DDTHH:mm:ss+01:00', // 2025-08-29T15:24:00+01:00
-      'YYYY-MM-DDTHH:mm:ss.SSS+01:00' // 2025-08-29T15:24:00.000+01:00
-    ])
+    .iso()
+    .custom(checkDateTimeReceived)
     .required()
+    .description(
+      'Date and time the waste was received, in UTC (2025-09-15T12:12:28Z) or BST (2025-09-15T13:12:28+01:00)'
+    )
+    .example('2025-09-15T13:12:28+01:00')
     .messages({
-      'date.format': DATE_ERRORS.INVALID
+      'date.base': DATE_ERRORS.INVALID,
+      'date.format': DATE_ERRORS.INVALID,
+      'any.invalid': DATE_ERRORS.INVALID
     }),
   hazardousWasteConsignmentCode: hazardousWasteConsignmentCodeSchema,
   reasonForNoConsignmentCode: Joi.string().allow(null, ''),
