@@ -163,7 +163,10 @@ describe('Create Receipt Movement - Date and Time Received Validation', () => {
       ['2025-09-15T12:12:28.000Z', '2025-09-15T12:12:28.000Z'],
       ['2025-09-15T13:12:28+01:00', '2025-09-15T12:12:28.000Z'],
       ['2025-09-15T13:12:28.000+01:00', '2025-09-15T12:12:28.000Z'],
-      ['2025-09-15T00:30:00+01:00', '2025-09-14T23:30:00.000Z']
+      ['2025-09-15T00:30:00+01:00', '2025-09-14T23:30:00.000Z'],
+      ['2025-09-15T12:12:28+00:00', '2025-09-15T12:12:28.000Z'],
+      ['2025-09-15T12:12:28.000+00:00', '2025-09-15T12:12:28.000Z'],
+      ['2000-01-01T00:30:00+01:00', '1999-12-31T23:30:00.000Z']
     ])('should store %s as %s', (dateTimeReceived, expected) => {
       expect(convert(dateTimeReceived)).toBe(expected)
     })
@@ -181,7 +184,11 @@ describe('Create Receipt Movement - Date and Time Received Validation', () => {
           )
         }
       } finally {
-        process.env.TZ = originalTimezone
+        if (originalTimezone === undefined) {
+          delete process.env.TZ
+        } else {
+          process.env.TZ = originalTimezone
+        }
       }
     })
 
@@ -217,6 +224,33 @@ describe('Create Receipt Movement - Date and Time Received Validation', () => {
       expect(error.details[0].message).toBe(
         '"dateTimeReceived" must be a valid UTC (2025-09-15T12:12:28Z) or BST (2025-09-15T13:12:28+01:00) ISO datetime'
       )
+    })
+
+    it.each([
+      ['an offset other than UTC or BST', '2025-09-15T14:12:28+02:00'],
+      ['29 February in a non-leap year', '0001-02-29T00:00:00Z']
+    ])('should reject %s', (_, dateTimeReceived) => {
+      const { error } = receiveMovementRequestSchema.validate({
+        ...createMovementRequest(),
+        dateTimeReceived
+      })
+      expect(error).toBeDefined()
+      expect(error.details[0].message).toBe(
+        '"dateTimeReceived" must be a valid UTC (2025-09-15T12:12:28Z) or BST (2025-09-15T13:12:28+01:00) ISO datetime'
+      )
+    })
+
+    it('should accept 29 February in a leap year with a two-digit year', () => {
+      // Date.UTC would treat year 0 as 1900, which isn't a leap year
+      expect(convert('0000-02-29T00:00:00Z')).toBe('0000-02-29T00:00:00.000Z')
+    })
+
+    it('should report the value the client sent in the error context', () => {
+      const { error } = receiveMovementRequestSchema.validate({
+        ...createMovementRequest(),
+        dateTimeReceived: '2025-09-15T14:12:28+02:00'
+      })
+      expect(error.details[0].context.value).toBe('2025-09-15T14:12:28+02:00')
     })
 
     it('should reject an impossible date rather than rolling it over', () => {

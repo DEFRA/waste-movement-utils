@@ -22,9 +22,14 @@ import { brokerOrDealerSchema } from './brokerOrDealer.js'
 const MIN_STRING_LENGTH = 1
 const LONG_STRING_MAX_LENGTH = 5000
 
-// A date and time, with the offset for UTC (Z) or BST (+01:00)
+// A date and time, with the offset for UTC (Z or +00:00) or BST (+01:00):
+//   2025-08-29T15:24:00Z
+//   2025-08-29T15:24:00.000Z
+//   2025-08-29T15:24:00+00:00
+//   2025-08-29T15:24:00+01:00
+//   2025-08-29T15:24:00.000+01:00
 const DATE_TIME_RECEIVED_REGEX =
-  /^(\d{4})-(\d{2})-(\d{2})T\d{2}:\d{2}:\d{2}(\.\d{3})?(Z|\+01:00)$/
+  /^(\d{4})-(\d{2})-(\d{2})T\d{2}:\d{2}:\d{2}(\.\d{3})?(Z|\+0[01]:00)$/
 
 /**
  * Narrows Joi.date().iso() to the dateTimeReceived contract. iso() parses
@@ -38,6 +43,9 @@ const DATE_TIME_RECEIVED_REGEX =
  * @returns {Date|Object} The Date, or a Joi error
  */
 const checkDateTimeReceived = (value, helpers) => {
+  const invalid = () =>
+    helpers.error('any.invalid', { value: helpers.original })
+
   // Only strings need narrowing; Date objects (e.g. from internal callers)
   // are accepted as before. iso() already rejects numeric timestamps
   if (typeof helpers.original !== 'string') {
@@ -47,14 +55,17 @@ const checkDateTimeReceived = (value, helpers) => {
   const match = helpers.original.match(DATE_TIME_RECEIVED_REGEX)
 
   if (!match) {
-    return helpers.error('any.invalid')
+    return invalid()
   }
 
-  const [, year, month, day] = match
-  const calendarDay = new Date(Date.UTC(year, month - 1, day)).getUTCDate()
+  // Reject impossible dates (e.g. 30 February) rather than rolling them over.
+  // setUTCFullYear, unlike Date.UTC, doesn't map years 0-99 to the 1900s
+  const [, year, month, day] = match.map(Number)
+  const calendar = new Date(0)
+  calendar.setUTCFullYear(year, month - 1, day)
 
-  if (calendarDay !== Number(day)) {
-    return helpers.error('any.invalid')
+  if (calendar.getUTCDate() !== day) {
+    return invalid()
   }
 
   return value
