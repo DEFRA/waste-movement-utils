@@ -38,9 +38,13 @@ const DATE_TIME_RECEIVED_REGEX =
  * @returns {Date|Object} The Date, or a Joi error
  */
 const checkDateTimeReceived = (value, helpers) => {
-  const match =
-    typeof helpers.original === 'string' &&
-    helpers.original.match(DATE_TIME_RECEIVED_REGEX)
+  // Only strings need narrowing; Date objects (e.g. from internal callers)
+  // are accepted as before. iso() already rejects numeric timestamps
+  if (typeof helpers.original !== 'string') {
+    return value
+  }
+
+  const match = helpers.original.match(DATE_TIME_RECEIVED_REGEX)
 
   if (!match) {
     return helpers.error('any.invalid')

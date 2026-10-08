@@ -197,6 +197,28 @@ describe('Create Receipt Movement - Date and Time Received Validation', () => {
       expect(description.examples).toEqual(['2025-09-15T13:12:28+01:00'])
     })
 
+    it('should still accept a Date object, as before', () => {
+      const { error, value } = receiveMovementRequestSchema.validate({
+        ...createMovementRequest(),
+        dateTimeReceived: new Date('2025-09-15T12:12:28Z')
+      })
+      expect(error).toBeUndefined()
+      expect(value.dateTimeReceived.toISOString()).toBe(
+        '2025-09-15T12:12:28.000Z'
+      )
+    })
+
+    it('should reject a numeric timestamp', () => {
+      const { error } = receiveMovementRequestSchema.validate({
+        ...createMovementRequest(),
+        dateTimeReceived: Date.parse('2025-09-15T12:12:28Z')
+      })
+      expect(error).toBeDefined()
+      expect(error.details[0].message).toBe(
+        '"dateTimeReceived" must be a valid UTC (2025-09-15T12:12:28Z) or BST (2025-09-15T13:12:28+01:00) ISO datetime'
+      )
+    })
+
     it('should reject an impossible date rather than rolling it over', () => {
       const { error } = receiveMovementRequestSchema.validate({
         ...createMovementRequest(),
