@@ -240,7 +240,7 @@ describe('Create Receipt Movement - Date and Time Received Validation', () => {
       )
     })
 
-    it('should accept 29 February in a leap year with a two-digit year', () => {
+    it('should accept 29 February in year 0000', () => {
       // Date.UTC would treat year 0 as 1900, which isn't a leap year
       expect(convert('0000-02-29T00:00:00Z')).toBe('0000-02-29T00:00:00.000Z')
     })
