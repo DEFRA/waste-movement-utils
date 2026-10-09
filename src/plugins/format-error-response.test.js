@@ -69,14 +69,8 @@ describe('problem-details-error-formatter plugin', () => {
       typeBase: 'https://waste-tracking.service.gov.uk/problems/'
     })
     expect(mockedResponse.header).not.toHaveBeenCalled()
-    expect(logger.error).toHaveBeenCalledWith(
-      {
-        instance: '/widgets',
-        title: 'Some Error',
-        type: 'https://waste-tracking.service.gov.uk/problems/some-error'
-      },
-      'Some Error'
-    )
+    expect(logger.error).toHaveBeenCalledTimes(1)
+    expect(logger.error).toHaveBeenCalledWith('Some Error (/widgets)')
     expect(result).toBe(mockedResponse)
   })
 
@@ -105,16 +99,47 @@ describe('problem-details-error-formatter plugin', () => {
       requestId: traceId
     })
     expect(mockedResponse.header).toHaveBeenCalledWith('x-request-id', traceId)
-    expect(logger.error).toHaveBeenCalledWith(
-      {
-        instance: '/widgets',
-        requestId: 'Trace-Id',
-        title: 'Some Error',
-        type: 'https://waste-tracking.service.gov.uk/problems/some-error'
-      },
-      'Some Error'
-    )
+    expect(logger.error).toHaveBeenCalledTimes(1)
+    expect(logger.error).toHaveBeenCalledWith('Some Error (/widgets)')
     expect(result).toBe(mockedResponse)
+  })
+
+  it('logs a summary line plus a separate line per validation error', async () => {
+    const logger = { error: jest.fn() }
+    const response = {
+      isBoom: true,
+      details: [
+        {
+          message: '"intendedCarriers" is required',
+          path: ['intendedCarriers'],
+          type: 'NotProvided'
+        },
+        {
+          message: 'must be equal to one of the allowed values',
+          path: ['supportingReferences', 0, 'label'],
+          type: 'InvalidValue'
+        }
+      ],
+      output: { statusCode: 400, payload: { error: 'Bad Request' } }
+    }
+    const request = {
+      response,
+      getTraceId: jest.fn().mockReturnValue('Trace-Id'),
+      logger,
+      path: '/beta-2/movements'
+    }
+
+    await extHandler(request, h)
+
+    expect(logger.error.mock.calls).toEqual([
+      ['Bad Request: 2 validation errors occurred (/beta-2/movements)'],
+      [
+        'Validation error 1/2 [NotProvided] /intendedCarriers: "intendedCarriers" is required'
+      ],
+      [
+        'Validation error 2/2 [InvalidValue] /supportingReferences/0/label: must be equal to one of the allowed values'
+      ]
+    ])
   })
 
   it('passes through when the response is not a Boom error', async () => {
