@@ -11,7 +11,16 @@ const formatBoomResponse = (request, h, typeBase) => {
     ...(requestId && { requestId })
   })
 
-  logger.error(problem.toJSON(), problem.title)
+  // Log infra strips structured fields, so everything goes in the message;
+  // trace.id is added to each line by the consuming service's logger mixin
+  const { title, detail, errors = [] } = problem
+  logger.error(`${detail ? `${title}: ${detail}` : title} (${path})`)
+  errors.forEach(({ message, pointer, errorType }, index) =>
+    logger.error(
+      `Validation error ${index + 1}/${errors.length} [${errorType}] ${pointer}: ${message}`
+    )
+  )
+
   return problem.toHapiResponse(h)
 }
 
