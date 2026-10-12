@@ -123,5 +123,37 @@ export function popsAndHazardousConcentrationOperatorTests({
       const result = validate({ concentration: null })
       expect(result.error).toBeUndefined()
     })
+
+    // A null operator means the same as no operator, so a component with no
+    // measurement can be sent with both fields explicitly null.
+    it('should accept a null operator with a null concentration', () => {
+      const result = validate({
+        concentration: null,
+        concentrationOperator: null
+      })
+      expect(result.error).toBeUndefined()
+      const component =
+        result.value.wasteItems[0][popsOrHazardousObjectProperty].components[0]
+      expect(component).not.toHaveProperty('concentrationOperator')
+    })
+
+    it('should accept a null operator with a concentration', () => {
+      const result = validate({
+        concentration: CONCENTRATION,
+        concentrationOperator: null
+      })
+      expect(result.error).toBeUndefined()
+      const component =
+        result.value.wasteItems[0][popsOrHazardousObjectProperty].components[0]
+      expect(component).not.toHaveProperty('concentrationOperator')
+    })
+
+    it('should accept a null operator on its own', () => {
+      const result = validate({ concentrationOperator: null })
+      expect(result.error).toBeUndefined()
+      const component =
+        result.value.wasteItems[0][popsOrHazardousObjectProperty].components[0]
+      expect(component).not.toHaveProperty('concentrationOperator')
+    })
   })
 }
