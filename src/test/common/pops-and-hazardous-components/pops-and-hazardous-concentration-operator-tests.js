@@ -132,6 +132,9 @@ export function popsAndHazardousConcentrationOperatorTests({
         concentrationOperator: null
       })
       expect(result.error).toBeUndefined()
+      const component =
+        result.value.wasteItems[0][popsOrHazardousObjectProperty].components[0]
+      expect(component).not.toHaveProperty('concentrationOperator')
     })
 
     it('should accept a null operator with a concentration', () => {
@@ -140,11 +143,17 @@ export function popsAndHazardousConcentrationOperatorTests({
         concentrationOperator: null
       })
       expect(result.error).toBeUndefined()
+      const component =
+        result.value.wasteItems[0][popsOrHazardousObjectProperty].components[0]
+      expect(component).not.toHaveProperty('concentrationOperator')
     })
 
     it('should accept a null operator on its own', () => {
       const result = validate({ concentrationOperator: null })
       expect(result.error).toBeUndefined()
+      const component =
+        result.value.wasteItems[0][popsOrHazardousObjectProperty].components[0]
+      expect(component).not.toHaveProperty('concentrationOperator')
     })
   })
 }
