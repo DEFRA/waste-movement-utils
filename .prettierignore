@@ -1,2 +1,4 @@
 package-lock.json
 node_modules
+src/openapi/vendor
+src/openapi/test-fixtures/*.json

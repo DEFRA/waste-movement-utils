@@ -50,6 +50,38 @@ npm run lint:fix       # Auto-fix linting issues
 npm run format         # Format code with Prettier
 ```
 
+## OpenAPI generation (`src/openapi/`)
+
+`generateOpenApi(routes, options)` builds the Swagger 2.0 document hapi-swagger
+17.3.2 would serve for a set of Joi-validated Hapi routes, so services can
+generate and commit their spec at build time instead of registering
+hapi-swagger.
+
+```js
+import { generateOpenApi } from '@defra/waste-movement-utils/src/openapi/index.js'
+
+// server: a Hapi server with the routes registered (no need to start it)
+const spec = await generateOpenApi(server.table(), {
+  info: { title: 'My API', version: '1.0' },
+  host: 'my-service.dev.cdp-int.defra.cloud',
+  schemes: ['https'],
+  routeTag: 'movements',
+  deReference: true
+  // ...any other hapi-swagger options; UI-only ones are ignored
+})
+```
+
+It is deliberately **not** exported from `src/index.js`: it is build-time
+tooling, so services import it by its path, and it never loads at runtime.
+Unlike the hapi-swagger plugin, `host` and `schemes` are required, since there
+is no request to derive them from.
+
+It wraps a vendored copy of hapi-swagger's core. See
+[`src/openapi/vendor/README.md`](src/openapi/vendor/README.md) for what was
+copied and changed. `src/openapi/index.test.js` compares its output with golden
+snapshots captured from hapi-swagger 17.3.2 by
+`scripts/capture-openapi-golden.js`.
+
 ## Licence
 
 THIS INFORMATION IS LICENSED UNDER THE CONDITIONS OF THE OPEN GOVERNMENT LICENCE found at:

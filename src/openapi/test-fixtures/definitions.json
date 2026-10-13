@@ -1,0 +1,384 @@
+{
+  "basePath": "/",
+  "info": {
+    "title": "Fixture API",
+    "version": "1.0",
+    "description": "Golden snapshot fixture"
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "host": "fixture.example.test",
+  "tags": [
+    {
+      "name": "admin",
+      "description": "Admin operations"
+    },
+    {
+      "name": "api",
+      "description": "Widget operations"
+    }
+  ],
+  "swagger": "2.0",
+  "paths": {
+    "/api/widgets/{widgetId}": {
+      "get": {
+        "summary": "Get a widget",
+        "operationId": "getApiWidgetsWidgetid",
+        "description": "Returns one widget<br/><br/>Or a 404",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "x-request-id",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "x-format": {
+              "guid": true
+            },
+            "name": "widgetId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "boolean",
+            "default": false,
+            "name": "expand",
+            "in": "query"
+          },
+          {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "name",
+                "kind"
+              ]
+            },
+            "collectionFormat": "multi",
+            "name": "fields",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "name": "limit",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/Widget"
+            },
+            "description": "The widget"
+          },
+          "404": {
+            "schema": {
+              "$ref": "#/definitions/NotFoundResponse"
+            },
+            "description": "Not found"
+          }
+        }
+      }
+    },
+    "/api/widgets": {
+      "post": {
+        "summary": "Create a widget",
+        "operationId": "postApiWidgets",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/Widget"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "schema": {
+              "$ref": "#/definitions/Created"
+            },
+            "description": "Created"
+          },
+          "400": {
+            "schema": {
+              "$ref": "#/definitions/BadRequestResponse"
+            },
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/widgets/{widgetId}/parts/{partId}": {
+      "put": {
+        "summary": "Replace a part",
+        "operationId": "putApiWidgetsWidgetidPartsPartid",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "widgetId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "name": "partId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/Parts"
+            }
+          }
+        ],
+        "tags": [
+          "parts"
+        ],
+        "responses": {
+          "204": {
+            "description": "Replaced"
+          },
+          "400": {
+            "schema": {
+              "$ref": "#/definitions/BadRequestResponse"
+            },
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/admin/widgets/{widgetId}": {
+      "delete": {
+        "summary": "Only included by the function routeTag",
+        "operationId": "deleteAdminWidgetsWidgetid",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "widgetId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "tags": [
+          "admin"
+        ],
+        "responses": {
+          "default": {
+            "schema": {
+              "type": "string"
+            },
+            "description": "Successful"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "kind": {
+      "type": "string",
+      "description": "Widget size",
+      "enum": [
+        "small",
+        "medium",
+        "large"
+      ]
+    },
+    "tags": {
+      "type": "array",
+      "maxItems": 5,
+      "x-constraint": {
+        "unique": true
+      },
+      "items": {
+        "type": "string"
+      }
+    },
+    "metric": {
+      "type": "string",
+      "enum": [
+        "Grams",
+        "Kilograms",
+        "Tonnes"
+      ]
+    },
+    "Weight": {
+      "type": "object",
+      "properties": {
+        "metric": {
+          "$ref": "#/definitions/metric"
+        },
+        "amount": {
+          "type": "number",
+          "x-constraint": {
+            "precision": 2,
+            "sign": "positive"
+          }
+        },
+        "isEstimate": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "metric",
+        "amount",
+        "isEstimate"
+      ]
+    },
+    "Part": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "quantity": {
+          "type": "integer",
+          "default": 1,
+          "minimum": 1,
+          "maximum": 500
+        },
+        "weight": {
+          "$ref": "#/definitions/Weight"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "parts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/Part"
+      }
+    },
+    "Address": {
+      "type": "object",
+      "properties": {
+        "line1": {
+          "type": "string",
+          "description": "First line",
+          "maxLength": 100
+        },
+        "line2": {
+          "type": "string"
+        },
+        "postcode": {
+          "type": "string",
+          "pattern": "^[A-Z]{1,2}\\d[A-Z\\d]? ?\\d[A-Z]{2}$"
+        }
+      },
+      "required": [
+        "line1",
+        "postcode"
+      ]
+    },
+    "Widget": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "Sprocket",
+          "minLength": 2,
+          "maxLength": 50
+        },
+        "kind": {
+          "$ref": "#/definitions/kind"
+        },
+        "email": {
+          "type": "string",
+          "x-format": {
+            "email": true
+          }
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "tags": {
+          "$ref": "#/definitions/tags"
+        },
+        "parts": {
+          "$ref": "#/definitions/parts"
+        },
+        "address": {
+          "$ref": "#/definitions/Address"
+        },
+        "reference": {
+          "type": "string",
+          "x-alternatives": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
+          ]
+        },
+        "notes": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "kind"
+      ]
+    },
+    "NotFoundResponse": {
+      "type": "object",
+      "properties": {
+        "statusCode": {
+          "type": "number",
+          "enum": [
+            404
+          ]
+        },
+        "error": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "Created": {
+      "type": "object",
+      "properties": {
+        "widgetId": {
+          "type": "string"
+        }
+      }
+    },
+    "BadRequestResponse": {
+      "type": "object",
+      "properties": {
+        "statusCode": {
+          "type": "number",
+          "enum": [
+            400
+          ]
+        },
+        "error": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "Parts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Part"
+      }
+    }
+  }
+}
