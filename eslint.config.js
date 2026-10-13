@@ -1,6 +1,8 @@
 import neostandard from 'neostandard'
 
 export default [
+  // near-literal copy of hapi-swagger, kept in its upstream style
+  { ignores: ['src/openapi/vendor/**'] },
   ...neostandard({
     env: ['node', 'jest'],
     ignores: [...neostandard.resolveIgnoresFromGitignore()],
