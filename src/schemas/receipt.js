@@ -6,8 +6,7 @@ import {
 import {
   ADDRESS_ERRORS,
   CONSIGNMENT_ERRORS,
-  AUTHORISATION_ERRORS,
-  DATE_ERRORS
+  AUTHORISATION_ERRORS
 } from '../constants/validation-error-messages.js'
 import { NO_CONSIGNMENT_REASONS } from '../constants/no-consignment-reasons.js'
 import {
@@ -21,55 +20,6 @@ import { brokerOrDealerSchema } from './brokerOrDealer.js'
 
 const MIN_STRING_LENGTH = 1
 const LONG_STRING_MAX_LENGTH = 5000
-
-// A date and time, with the offset for UTC (Z or +00:00) or BST (+01:00):
-//   2025-08-29T15:24:00Z
-//   2025-08-29T15:24:00.000Z
-//   2025-08-29T15:24:00+00:00
-//   2025-08-29T15:24:00+01:00
-//   2025-08-29T15:24:00.000+01:00
-const DATE_TIME_RECEIVED_REGEX =
-  /^(\d{4})-(\d{2})-(\d{2})T\d{2}:\d{2}:\d{2}(\.\d{3})?(Z|\+0[01]:00)$/
-
-/**
- * Narrows Joi.date().iso() to the dateTimeReceived contract. iso() parses
- * offsets correctly and documents the field as `format: date-time`, but on
- * its own it also accepts a date with no time, a time with no offset (read in
- * the server's timezone), any offset, and impossible dates such as 30 February
- * (rolled over to March). This checks the original string so those are
- * rejected.
- * @param {Date} value - The Date parsed by Joi.date().iso()
- * @param {Object} helpers - Joi custom validation helpers
- * @returns {Date|Object} The Date, or a Joi error
- */
-const checkDateTimeReceived = (value, helpers) => {
-  const invalid = () =>
-    helpers.error('any.invalid', { value: helpers.original })
-
-  // Only strings need narrowing; Date objects (e.g. from internal callers)
-  // are accepted as before. iso() already rejects numeric timestamps
-  if (typeof helpers.original !== 'string') {
-    return value
-  }
-
-  const match = helpers.original.match(DATE_TIME_RECEIVED_REGEX)
-
-  if (!match) {
-    return invalid()
-  }
-
-  // Reject impossible dates (e.g. 30 February) rather than rolling them over.
-  // setUTCFullYear, unlike Date.UTC, doesn't map years 0-99 to the 1900s
-  const [_, year, month, day] = match.map(Number)
-  const calendar = new Date(0)
-  calendar.setUTCFullYear(year, month - 1, day)
-
-  if (calendar.getUTCDate() !== day) {
-    return invalid()
-  }
-
-  return value
-}
 
 /**
  * Determines if a site authorisation number is valid
@@ -129,19 +79,7 @@ export const receiveMovementRequestSchema = Joi.object({
     defraCustomerOrganisationName: Joi.string(),
     defraCustomerOrganisationIsLocalAuthority: Joi.boolean().strict()
   }),
-  dateTimeReceived: Joi.date()
-    .iso()
-    .custom(checkDateTimeReceived)
-    .required()
-    .description(
-      'Date and time the waste was received, in UTC (2025-09-15T12:12:28Z) or BST (2025-09-15T13:12:28+01:00)'
-    )
-    .example('2025-09-15T13:12:28+01:00')
-    .messages({
-      'date.base': DATE_ERRORS.INVALID,
-      'date.format': DATE_ERRORS.INVALID,
-      'any.invalid': DATE_ERRORS.INVALID
-    }),
+  dateTimeReceived: Joi.date().iso().required(),
   hazardousWasteConsignmentCode: hazardousWasteConsignmentCodeSchema,
   reasonForNoConsignmentCode: Joi.string().allow(null, ''),
   yourUniqueReference: Joi.string(),
