@@ -67,7 +67,7 @@ export function popsAndHazardousConcentrationOperatorTests({
 
     // Regulators record "below threshold" for POPs waste only. For hazardous
     // waste the only supported indication is that a threshold was exceeded.
-    it(`should ${isHazardous ? 'reject' : 'accept'} a concentration qualified by "${LESS_THAN}"`, () => {
+    it(`should ${isHazardous ? 'reject' : 'accept'} a concentration qualified by "${LESS_THAN}" or null`, () => {
       const result = validate({
         concentration: CONCENTRATION,
         concentrationOperator: LESS_THAN
@@ -80,7 +80,7 @@ export function popsAndHazardousConcentrationOperatorTests({
 
       expect(result.error).toBeDefined()
       expect(result.error.message).toBe(
-        `"${componentPath}.concentrationOperator" must be [${GREATER_THAN}]`
+        `"${componentPath}.concentrationOperator" must be one of [null, ${GREATER_THAN}]`
       )
     })
 
@@ -109,9 +109,16 @@ export function popsAndHazardousConcentrationOperatorTests({
         concentrationOperator: UNSUPPORTED_OPERATOR
       })
       expect(result.error).toBeDefined()
-      expect(result.error.message).toContain(
-        `"${componentPath}.concentrationOperator" must be`
-      )
+
+      if (popsOrHazardous === 'POPs') {
+        expect(result.error.message).toContain(
+          `"${componentPath}.concentrationOperator" must be one of [null, >, <]`
+        )
+      } else if (popsOrHazardous === 'Hazardous') {
+        expect(result.error.message).toContain(
+          `"${componentPath}.concentrationOperator" must be one of [null, >]`
+        )
+      }
     })
 
     it('should accept a concentration with no operator', () => {
