@@ -14,7 +14,11 @@ export const IRL_POSTCODE_REGEX =
 const ENGLAND_CARRIER_REGISTRATION_NUMBER_REGEXES = [/^CBD[LU]\d{3,}$/i]
 
 const SEPA_CARRIER_REGISTRATION_NUMBER_REGEXES = [
-  /^((WCR\/R\/\d{7})|((SCO|SEA|SNO|SWE|WCR)\/\d{6}))$/i,
+  /^EAS\/R\/\d{6,7}$/i, // EAS/R/999999, EAS/R/9999999, issued under EASR since November 2025
+  /^WCR\/R\/\d{7}$/i, // WCR/R/9999999
+  /^WCR\/[A-Z0-9]{6}$/i, // WCR/ZZZZZZ, six letters or digits
+  /^(SCO|SEA|SNO|SWE)\/\d{6}(\/CB)?$/i, // SCO/999999 and SCO/999999/CB, likewise SEA, SNO and SWE
+  /^SCO\/\d{6}\/B$/i, // SCO/999999/B
   /^PCT-[A-Z]-\d{3,7}$/i
 ]
 
