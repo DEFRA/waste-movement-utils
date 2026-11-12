@@ -45,6 +45,10 @@ const ENGLAND_SITE_AUTHORISATION_NUMBER_REGEXES = [
   /^WML\d{5,6}$/i // WML99999, WML999999
 ]
 
+// EAS/P/999999 is not a format SEPA issues: kept so nothing breaks until DWTC-346 removes it
+export const SCOTLAND_EAS_SIX_DIGIT_SITE_AUTHORISATION_NUMBER_REGEX =
+  /^EAS\/P\/\d{6}$/i
+
 // Scotland (SEPA) site authorisation number regexes
 const SCOTLAND_SITE_AUTHORISATION_NUMBER_REGEXES = [
   /^PPC\/[AWEN]\/\d{7}$/i, // PPC/A/9999999
@@ -52,7 +56,8 @@ const SCOTLAND_SITE_AUTHORISATION_NUMBER_REGEXES = [
   /^WML\/[LWEN]\/\d{7}\/\d{2}$/i, // WML/L/9999999/99
   /^PPC\/A\/SEPA\d{4}-\d{4}$/i, // PPC/A/SEPA9999-9999
   /^WML\/L\/SEPA\d{4}-\d{4}$/i, // WML/L/SEPA9999-9999
-  /^EAS\/P\/\d{6}$/i // EAS/P/999999
+  /^EAS\/P\/\d{7}$/, // EAS/P/9999999, upper case only
+  SCOTLAND_EAS_SIX_DIGIT_SITE_AUTHORISATION_NUMBER_REGEX // EAS/P/999999
 ]
 
 // Wales (NRW) site authorisation number regexes - shares regexes with England

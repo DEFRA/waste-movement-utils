@@ -16,6 +16,8 @@ export const METRIC_NAMES = {
   AUDIT_ERRORS_FAILED: 'audit.errors.failed',
   RECEIVER_ORG_ID: 'receiver.orgId',
   RECEIVER_ORG_ID_BULK: 'receiver.orgId.bulk',
+  RECEIVER_AUTHORISATION_NUMBER_SIX_DIGIT_EAS:
+    'receiver.authorisationNumber.six_digit_eas',
   PAT_CREATE: 'pat.create',
   PAT_SUBMISSION: 'pat.submission',
   PAT_SCENARIO_RESULT: 'pat.scenario.result'

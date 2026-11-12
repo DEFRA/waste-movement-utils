@@ -43,6 +43,7 @@ export * from './validation-warnings/validation-warnings.js'
 export * from './helpers/validation-error-formatter.js'
 export * from './helpers/env-vars.js'
 export * from './helpers/log-opensearch-metrics.js'
+export * from './helpers/log-six-digit-eas-authorisation-number.js'
 
 export * from './plugins/basic-auth.js'
 export * from './plugins/format-error-response.js'
