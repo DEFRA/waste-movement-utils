@@ -30,6 +30,15 @@ describe('Receipt Schema Validation - EWC', () => {
       expect(result3.error).toBeUndefined()
     })
 
+    it.each(['100822', '160612', '160623', '200144'])(
+      'should accept %s, a non-hazardous code the EU added from 9 December 2026',
+      (ewcCode) => {
+        const result = validateEwcCode([ewcCode])
+
+        expect(result.error).toBeUndefined()
+      }
+    )
+
     it('should reject EWC codes with spaces', () => {
       // Test with valid EWC codes with spaces
       const result1 = validateEwcCode(['01 01 01'])
