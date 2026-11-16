@@ -3729,6 +3729,60 @@ export const validEwcCodes = [
       'Wastes from cooling-water treatment other than those mentioned in 10 08 19'
   },
   {
+    code: '100821',
+    isHazardous: true,
+    entryTypeDesc: '',
+    chapter: 'Wastes from thermal processes',
+    subChapter: 'Wastes from other non-ferrous thermal metallurgy',
+    description:
+      'Slags from waste lithium-based battery recycling containing hazardous substances'
+  },
+  {
+    code: '100822',
+    isHazardous: false,
+    entryTypeDesc: '',
+    chapter: 'Wastes from thermal processes',
+    subChapter: 'Wastes from other non-ferrous thermal metallurgy',
+    description:
+      'Slags from waste lithium-based battery recycling other than those mentioned in 10 08 21'
+  },
+  {
+    code: '100823',
+    isHazardous: true,
+    entryTypeDesc: '',
+    chapter: 'Wastes from thermal processes',
+    subChapter: 'Wastes from other non-ferrous thermal metallurgy',
+    description:
+      'Slags from waste nickel-based battery recycling containing hazardous substances'
+  },
+  {
+    code: '100824',
+    isHazardous: false,
+    entryTypeDesc: '',
+    chapter: 'Wastes from thermal processes',
+    subChapter: 'Wastes from other non-ferrous thermal metallurgy',
+    description:
+      'Slags from waste nickel-based battery recycling other than those mentioned in 10 08 23'
+  },
+  {
+    code: '100825',
+    isHazardous: true,
+    entryTypeDesc: '',
+    chapter: 'Wastes from thermal processes',
+    subChapter: 'Wastes from other non-ferrous thermal metallurgy',
+    description:
+      'Slags from other waste battery recycling containing hazardous substances except 10 04 01, 10 08 21 and 10 08 23'
+  },
+  {
+    code: '100826',
+    isHazardous: false,
+    entryTypeDesc: '',
+    chapter: 'Wastes from thermal processes',
+    subChapter: 'Wastes from other non-ferrous thermal metallurgy',
+    description:
+      'Slags from other waste battery recycling other than those mentioned in 10 08 25'
+  },
+  {
     code: '100899',
     isHazardous: false,
     entryTypeDesc: 'Absolute non-hazardous',
@@ -5714,6 +5768,208 @@ export const validEwcCodes = [
       'Separately collected electrolyte from batteries and accumulators'
   },
   {
+    code: '160607',
+    isHazardous: true,
+    entryTypeDesc: '',
+    chapter: 'Wastes not otherwise specified in the list',
+    subChapter: 'Wastes from the manufacture, supply and use of batteries',
+    description: 'Waste lithium-based batteries'
+  },
+  {
+    code: '160608',
+    isHazardous: true,
+    entryTypeDesc: '',
+    chapter: 'Wastes not otherwise specified in the list',
+    subChapter: 'Wastes from the manufacture, supply and use of batteries',
+    description:
+      'Waste nickel-based batteries other than those mentioned in 16 06 02 (for example NiMH, Na-NiCl2)'
+  },
+  {
+    code: '160609',
+    isHazardous: true,
+    entryTypeDesc: '',
+    chapter: 'Wastes not otherwise specified in the list',
+    subChapter: 'Wastes from the manufacture, supply and use of batteries',
+    description: 'Waste zinc-based batteries, including silver oxide batteries'
+  },
+  {
+    code: '160610',
+    isHazardous: true,
+    entryTypeDesc: '',
+    chapter: 'Wastes not otherwise specified in the list',
+    subChapter: 'Wastes from the manufacture, supply and use of batteries',
+    description:
+      'Waste sodium-based batteries containing hazardous substances (except 16 06 11)'
+  },
+  {
+    code: '160611',
+    isHazardous: true,
+    entryTypeDesc: '',
+    chapter: 'Wastes not otherwise specified in the list',
+    subChapter: 'Wastes from the manufacture, supply and use of batteries',
+    description: 'Waste sodium sulphur batteries'
+  },
+  {
+    code: '160612',
+    isHazardous: false,
+    entryTypeDesc: '',
+    chapter: 'Wastes not otherwise specified in the list',
+    subChapter: 'Wastes from the manufacture, supply and use of batteries',
+    description:
+      'Other waste sodium-based batteries (except 16 06 10 and 16 06 11)'
+  },
+  {
+    code: '160613',
+    isHazardous: true,
+    entryTypeDesc: '',
+    chapter: 'Wastes not otherwise specified in the list',
+    subChapter: 'Wastes from the manufacture, supply and use of batteries',
+    description: 'Mixed waste batteries'
+  },
+  {
+    code: '160614',
+    isHazardous: true,
+    entryTypeDesc: '',
+    chapter: 'Wastes not otherwise specified in the list',
+    subChapter: 'Wastes from the manufacture, supply and use of batteries',
+    description: 'Other waste batteries containing hazardous substances'
+  },
+  {
+    code: '160615',
+    isHazardous: false,
+    entryTypeDesc: '',
+    chapter: 'Wastes not otherwise specified in the list',
+    subChapter: 'Wastes from the manufacture, supply and use of batteries',
+    description:
+      'Waste batteries not otherwise specified other than those mentioned in 16 06 12 and 16 06 14'
+  },
+  {
+    code: '160622',
+    isHazardous: true,
+    entryTypeDesc: '',
+    chapter: 'Wastes not otherwise specified in the list',
+    subChapter: 'Wastes from the manufacture, supply and use of batteries',
+    description:
+      'Lead-acid battery manufacturing waste containing hazardous substances (for example lead paste)'
+  },
+  {
+    code: '160623',
+    isHazardous: false,
+    entryTypeDesc: '',
+    chapter: 'Wastes not otherwise specified in the list',
+    subChapter: 'Wastes from the manufacture, supply and use of batteries',
+    description:
+      'Lead-acid battery manufacturing waste other than that mentioned in 16 06 22'
+  },
+  {
+    code: '160624',
+    isHazardous: true,
+    entryTypeDesc: '',
+    chapter: 'Wastes not otherwise specified in the list',
+    subChapter: 'Wastes from the manufacture, supply and use of batteries',
+    description:
+      'Lithium-based battery manufacturing waste containing hazardous substances (for example cathode cut-offs, cathode slurry, off specification battery cells, modules and/or packs)'
+  },
+  {
+    code: '160625',
+    isHazardous: false,
+    entryTypeDesc: '',
+    chapter: 'Wastes not otherwise specified in the list',
+    subChapter: 'Wastes from the manufacture, supply and use of batteries',
+    description:
+      'Lithium-based battery manufacturing waste other than those mentioned in 16 06 24 (for example anode cut-offs)'
+  },
+  {
+    code: '160626',
+    isHazardous: true,
+    entryTypeDesc: '',
+    chapter: 'Wastes not otherwise specified in the list',
+    subChapter: 'Wastes from the manufacture, supply and use of batteries',
+    description:
+      'Nickel-based battery manufacturing waste containing hazardous substances (for example liquid and solid cathode material)'
+  },
+  {
+    code: '160627',
+    isHazardous: false,
+    entryTypeDesc: '',
+    chapter: 'Wastes not otherwise specified in the list',
+    subChapter: 'Wastes from the manufacture, supply and use of batteries',
+    description:
+      'Nickel-based battery manufacturing waste other than that mentioned in 16 06 26'
+  },
+  {
+    code: '160628',
+    isHazardous: true,
+    entryTypeDesc: '',
+    chapter: 'Wastes not otherwise specified in the list',
+    subChapter: 'Wastes from the manufacture, supply and use of batteries',
+    description:
+      'Alkaline-based battery manufacturing waste containing hazardous substances'
+  },
+  {
+    code: '160629',
+    isHazardous: false,
+    entryTypeDesc: '',
+    chapter: 'Wastes not otherwise specified in the list',
+    subChapter: 'Wastes from the manufacture, supply and use of batteries',
+    description:
+      'Alkaline-based battery manufacturing waste other than that mentioned in 16 06 28'
+  },
+  {
+    code: '160630',
+    isHazardous: true,
+    entryTypeDesc: '',
+    chapter: 'Wastes not otherwise specified in the list',
+    subChapter: 'Wastes from the manufacture, supply and use of batteries',
+    description:
+      'Zinc-based battery manufacturing waste containing hazardous substances'
+  },
+  {
+    code: '160631',
+    isHazardous: false,
+    entryTypeDesc: '',
+    chapter: 'Wastes not otherwise specified in the list',
+    subChapter: 'Wastes from the manufacture, supply and use of batteries',
+    description:
+      'Zinc-based battery manufacturing waste other than that mentioned in 16 06 30'
+  },
+  {
+    code: '160632',
+    isHazardous: true,
+    entryTypeDesc: '',
+    chapter: 'Wastes not otherwise specified in the list',
+    subChapter: 'Wastes from the manufacture, supply and use of batteries',
+    description:
+      'Sodium-based battery manufacturing waste containing hazardous substances'
+  },
+  {
+    code: '160633',
+    isHazardous: false,
+    entryTypeDesc: '',
+    chapter: 'Wastes not otherwise specified in the list',
+    subChapter: 'Wastes from the manufacture, supply and use of batteries',
+    description:
+      'Sodium-based battery manufacturing waste other than that mentioned in 16 06 32'
+  },
+  {
+    code: '160634',
+    isHazardous: true,
+    entryTypeDesc: '',
+    chapter: 'Wastes not otherwise specified in the list',
+    subChapter: 'Wastes from the manufacture, supply and use of batteries',
+    description:
+      'Battery manufacturing waste containing hazardous substances other than that mentioned in 16 06 22, 16 06 24, 16 06 26, 16 06 28, 16 06 30 and 16 06 32'
+  },
+  {
+    code: '160635',
+    isHazardous: false,
+    entryTypeDesc: '',
+    chapter: 'Wastes not otherwise specified in the list',
+    subChapter: 'Wastes from the manufacture, supply and use of batteries',
+    description:
+      'Battery manufacturing waste other than that mentioned in 16 06 23, 16 06 25, 16 06 27, 16 06 29, 16 06 31 and 16 06 33'
+  },
+  {
     code: '160708',
     isHazardous: true,
     entryTypeDesc: 'Mirror hazardous',
@@ -6676,6 +6932,27 @@ export const validEwcCodes = [
     description: 'Other wastes containing hazardous substances'
   },
   {
+    code: '190212',
+    isHazardous: true,
+    entryTypeDesc: '',
+    chapter:
+      'Wastes from waste management facilities, off-site waste water treatment plants and the preparation of water intended for human consumption and water for industrial use',
+    subChapter:
+      'Wastes from physico/chemical treatments of waste (including dechromatation, decyanidation, neutralisation)',
+    description:
+      'Solid salts and solutions containing heavy metals from battery recycling'
+  },
+  {
+    code: '190213',
+    isHazardous: true,
+    entryTypeDesc: '',
+    chapter:
+      'Wastes from waste management facilities, off-site waste water treatment plants and the preparation of water intended for human consumption and water for industrial use',
+    subChapter:
+      'Wastes from physico/chemical treatments of waste (including dechromatation, decyanidation, neutralisation)',
+    description: 'Other wastes containing hazardous substances'
+  },
+  {
     code: '190299',
     isHazardous: false,
     entryTypeDesc: 'Mirror non-hazardous',
@@ -7404,6 +7681,93 @@ export const validEwcCodes = [
       'Aqueous liquid wastes and aqueous concentrates from groundwater remediation other than those mentioned in 19 13 07'
   },
   {
+    code: '191401',
+    isHazardous: true,
+    entryTypeDesc: '',
+    chapter:
+      'Wastes from waste management facilities, off-site waste water treatment plants and the preparation of water intended for human consumption and water for industrial use',
+    subChapter:
+      'Intermediate fractions from the thermal and/or mechanical treatment of waste batteries and of battery manufacturing waste',
+    description:
+      'Intermediate fraction from the thermal and/or mechanical treatment of waste lead-acid batteries and lead-acid battery manufacturing waste containing a mixture of electrode materials'
+  },
+  {
+    code: '191402',
+    isHazardous: true,
+    entryTypeDesc: '',
+    chapter:
+      'Wastes from waste management facilities, off-site waste water treatment plants and the preparation of water intended for human consumption and water for industrial use',
+    subChapter:
+      'Intermediate fractions from the thermal and/or mechanical treatment of waste batteries and of battery manufacturing waste',
+    description:
+      'Intermediate fraction from the thermal and/or mechanical treatment of waste lithium-based batteries and lithium-based battery manufacturing waste containing a mixture of electrode materials'
+  },
+  {
+    code: '191403',
+    isHazardous: true,
+    entryTypeDesc: '',
+    chapter:
+      'Wastes from waste management facilities, off-site waste water treatment plants and the preparation of water intended for human consumption and water for industrial use',
+    subChapter:
+      'Intermediate fractions from the thermal and/or mechanical treatment of waste batteries and of battery manufacturing waste',
+    description:
+      'Intermediate fraction from the thermal and/or mechanical treatment of waste nickel-based batteries and nickel-based battery manufacturing waste containing a mixture of electrode materials'
+  },
+  {
+    code: '191404',
+    isHazardous: true,
+    entryTypeDesc: '',
+    chapter:
+      'Wastes from waste management facilities, off-site waste water treatment plants and the preparation of water intended for human consumption and water for industrial use',
+    subChapter:
+      'Intermediate fractions from the thermal and/or mechanical treatment of waste batteries and of battery manufacturing waste',
+    description:
+      'Intermediate fraction from the thermal and/or mechanical treatment of waste alkaline-based batteries and alkaline-based battery manufacturing waste containing a mixture of electrode materials'
+  },
+  {
+    code: '191405',
+    isHazardous: true,
+    entryTypeDesc: '',
+    chapter:
+      'Wastes from waste management facilities, off-site waste water treatment plants and the preparation of water intended for human consumption and water for industrial use',
+    subChapter:
+      'Intermediate fractions from the thermal and/or mechanical treatment of waste batteries and of battery manufacturing waste',
+    description:
+      'Intermediate fraction from the thermal and/or mechanical treatment of waste zinc-based batteries and zinc-based battery manufacturing waste containing a mixture of electrode materials'
+  },
+  {
+    code: '191406',
+    isHazardous: true,
+    entryTypeDesc: '',
+    chapter:
+      'Wastes from waste management facilities, off-site waste water treatment plants and the preparation of water intended for human consumption and water for industrial use',
+    subChapter:
+      'Intermediate fractions from the thermal and/or mechanical treatment of waste batteries and of battery manufacturing waste',
+    description:
+      'Intermediate fraction from the thermal and/or mechanical treatment of waste sodium-based batteries and sodium-based battery manufacturing waste containing a mixture of electrode materials'
+  },
+  {
+    code: '191407',
+    isHazardous: true,
+    entryTypeDesc: '',
+    chapter:
+      'Wastes from waste management facilities, off-site waste water treatment plants and the preparation of water intended for human consumption and water for industrial use',
+    subChapter:
+      'Intermediate fractions from the thermal and/or mechanical treatment of waste batteries and of battery manufacturing waste',
+    description:
+      'Intermediate fraction from the thermal and/or mechanical treatment of waste batteries and battery manufacturing waste containing a mixture of electrode materials, not otherwise specified in 19 14 01 to 19 14 06'
+  },
+  {
+    code: '191408',
+    isHazardous: false,
+    entryTypeDesc: '',
+    chapter:
+      'Wastes from waste management facilities, off-site waste water treatment plants and the preparation of water intended for human consumption and water for industrial use',
+    subChapter:
+      'Intermediate fractions from the thermal and/or mechanical treatment of waste batteries and of battery manufacturing waste',
+    description: 'Alloys from waste battery recycling (in massive form)'
+  },
+  {
     code: '200101',
     isHazardous: false,
     entryTypeDesc: 'Absolute non-hazardous',
@@ -7669,6 +8033,35 @@ export const validEwcCodes = [
       'Municipal wastes (household waste and similar commercial, industrial and institutional wastes) including separately collected fractions',
     subChapter: 'Separately collected fractions (except 15 01)',
     description: 'Wastes from chimney sweeping'
+  },
+  {
+    code: '200142',
+    isHazardous: true,
+    entryTypeDesc: '',
+    chapter:
+      'Municipal wastes (household waste and similar commercial, industrial and institutional wastes) including separately collected fractions',
+    subChapter: 'Separately collected fractions (except 15 01)',
+    description:
+      'Waste batteries included in 16 06 01 to 16 06 04, 16 06 08 to 16 06 11 or 16 06 14 and mixed waste batteries containing those waste batteries including also 16 06 07'
+  },
+  {
+    code: '200143',
+    isHazardous: true,
+    entryTypeDesc: '',
+    chapter:
+      'Municipal wastes (household waste and similar commercial, industrial and institutional wastes) including separately collected fractions',
+    subChapter: 'Separately collected fractions (except 15 01)',
+    description: 'Waste lithium-based batteries included in 16 06 07'
+  },
+  {
+    code: '200144',
+    isHazardous: false,
+    entryTypeDesc: '',
+    chapter:
+      'Municipal wastes (household waste and similar commercial, industrial and institutional wastes) including separately collected fractions',
+    subChapter: 'Separately collected fractions (except 15 01)',
+    description:
+      'Waste batteries other than those mentioned in 20 01 42 and 20 01 43'
   },
   {
     code: '200199',

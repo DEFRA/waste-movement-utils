@@ -211,4 +211,25 @@ describe('Hazardous Waste Consignment Note Code rules', () => {
     expect(error).toBeDefined()
     expect(error.details[0].type).toBe('InvalidFormat.consignmentCode')
   })
+
+  it('Require consignment note code for a hazardous EWC code the EU added from 9 December 2026', () => {
+    const payload = buildBasePayload()
+    payload.wasteItems[0].ewcCodes = ['160607'] // hazardous
+    payload.hazardousWasteConsignmentCode = null
+
+    const { error } = receiveMovementRequestSchema.validate(payload)
+    expect(error).toBeDefined()
+    expect(error.message).toBe(
+      '"hazardousWasteConsignmentCode" is required when hazardous EWC codes are present'
+    )
+  })
+
+  it('Do not require consignment note code nor reason for a non-hazardous EWC code the EU added from 9 December 2026', () => {
+    const payload = buildBasePayload()
+    payload.wasteItems[0].ewcCodes = ['160612'] // non-hazardous
+    payload.hazardousWasteConsignmentCode = null
+
+    const { error } = receiveMovementRequestSchema.validate(payload)
+    expect(error).toBeUndefined()
+  })
 })
