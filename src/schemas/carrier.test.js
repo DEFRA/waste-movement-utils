@@ -37,6 +37,18 @@ describe('Carrier Registration Validation', () => {
         expect(error).toBeUndefined()
       }
     )
+
+    it('accepts submission for piped waste when registrationNumber is "null" and reasonForNoRegistrationNumber is "FIXED_CONVEYANCE"', () => {
+      const carrier = {
+        registrationNumber: null,
+        reasonForNoRegistrationNumber: 'FIXED_CONVEYANCE',
+        organisationName: 'Test Carrier',
+        meansOfTransport: 'Piped'
+      }
+
+      const { error } = carrierSchema.validate(carrier)
+      expect(error).toBeUndefined()
+    })
   })
 
   describe('Scenario: Invalid submissions', () => {
@@ -81,6 +93,21 @@ describe('Carrier Registration Validation', () => {
       expect(error).toBeDefined()
       expect(error.message).toBe(
         `"reasonForNoRegistrationNumber" must be one of: ${REASONS_FOR_NO_REGISTRATION_NUMBER.join(', ')}`
+      )
+    })
+
+    it('rejects submission with an invalid reason, naming the five reasons that are accepted', () => {
+      const carrier = {
+        registrationNumber: null,
+        reasonForNoRegistrationNumber: 'Invalid reason',
+        organisationName: 'Test Carrier',
+        meansOfTransport: MEANS_OF_TRANSPORT[1]
+      }
+
+      const { error } = carrierSchema.validate(carrier)
+      expect(error).toBeDefined()
+      expect(error.message).toBe(
+        '"reasonForNoRegistrationNumber" must be one of: ON_SITE, HOUSEHOLD, ONE_OFF, MARINE, FIXED_CONVEYANCE'
       )
     })
 
