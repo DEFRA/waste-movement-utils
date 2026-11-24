@@ -1,4 +1,4 @@
-import { sourceOfComponentsProvided } from '../../../constants/source-of-components.js'
+import { sourceOfComponentsProvided } from '@defra/waste-movement-utils-reference-data'
 import { VALIDATION_WARNING_TYPES } from '../../../constants/validation-warning-messages.js'
 import { processValidationWarnings } from '../../../validation-warnings/validation-warnings.js'
 import { formatPopsOrHazardousFields } from '../../../schemas/waste.js'

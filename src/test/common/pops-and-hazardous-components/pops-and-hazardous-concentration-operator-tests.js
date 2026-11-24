@@ -1,4 +1,4 @@
-import { concentrationOperators } from '../../../constants/concentration-operators.js'
+import { concentrationOperators } from '@defra/waste-movement-utils-reference-data'
 import { createTestPayloadWith } from '../../../schemas/test-helpers/waste-test-helpers.js'
 import { formatPopsOrHazardousFields } from '../../../schemas/waste.js'
 

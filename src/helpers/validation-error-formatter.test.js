@@ -1,5 +1,5 @@
 import { validationErrorFormatter } from './validation-error-formatter.js'
-import { HTTP_STATUS } from '../constants/http-status-codes.js'
+import { HTTP_STATUS } from '@defra/waste-movement-utils-http-errors'
 
 describe('Error Handler', () => {
   const mockLogger = {

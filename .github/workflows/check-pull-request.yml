@@ -54,3 +54,28 @@ jobs:
               process.exit(1);
             }
           "
+
+      # A package publishes only under a new version, so a change to its files
+      # needs one. A package that main does not have yet passes
+      - name: Check changed packages have a new version
+        run: |
+          for folder in packages/*; do
+            git cat-file -e "origin/main:$folder/package.json" 2>/dev/null || continue
+            git diff --quiet origin/main -- "$folder" && continue
+            PR_VERSION=$(node -p "require('./$folder/package.json').version")
+            BASE_VERSION=$(git show "origin/main:$folder/package.json" | node -p "JSON.parse(require('fs').readFileSync('/dev/stdin','utf8')).version")
+            node -e "
+              const [a, b] = ['$PR_VERSION', '$BASE_VERSION'].map(v => v.split('.').map(Number));
+              const isGreater = a[0] > b[0] || (a[0] === b[0] && a[1] > b[1]) || (a[0] === b[0] && a[1] === b[1] && a[2] > b[2]);
+              if (!isGreater) {
+                console.error('::error::Version in $folder/package.json ($PR_VERSION) must be greater than the base branch version ($BASE_VERSION)');
+                process.exit(1);
+              }
+            "
+          done
+
+      - name: Show what each package would publish
+        run: |
+          for folder in packages/* .; do
+            npm pack "./$folder" --dry-run
+          done

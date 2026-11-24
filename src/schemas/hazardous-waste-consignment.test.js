@@ -1,7 +1,9 @@
 import { receiveMovementRequestSchema } from './receipt.js'
 import { createMovementRequest } from '../test/utils/createMovementRequest.js'
-import { validContainerTypes } from '../constants/container-types.js'
-import { NO_CONSIGNMENT_REASONS } from '../constants/no-consignment-reasons.js'
+import {
+  validContainerTypes,
+  NO_CONSIGNMENT_REASONS
+} from '@defra/waste-movement-utils-reference-data'
 
 // Helper to build a base valid payload
 const buildBasePayload = () => ({

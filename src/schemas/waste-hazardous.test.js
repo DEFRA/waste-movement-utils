@@ -1,8 +1,8 @@
-import { validHazCodes } from '../constants/haz-codes.js'
 import {
+  validHazCodes,
   sourceOfComponentsNotProvided,
   validSourceOfComponents
-} from '../constants/source-of-components.js'
+} from '@defra/waste-movement-utils-reference-data'
 import { popsAndHazardousConcentrationOperatorTests } from '../test/common/pops-and-hazardous-components/pops-and-hazardous-concentration-operator-tests.js'
 import { popsAndHazardousComponentsErrorTests } from '../test/common/pops-and-hazardous-components/pops-and-hazardous-components-error-tests.js'
 import { receiveMovementRequestSchema } from './receipt.js'

@@ -1,5 +1,7 @@
-import { MEANS_OF_TRANSPORT } from '../constants/means-of-transport.js'
-import { REASONS_FOR_NO_REGISTRATION_NUMBER } from '../constants/reasons-for-no-registration-number.js'
+import {
+  MEANS_OF_TRANSPORT,
+  REASONS_FOR_NO_REGISTRATION_NUMBER
+} from '@defra/waste-movement-utils-reference-data'
 import { carrierBrokerDealerRegistrationNumberErrorTests } from '../test/common/carrier-broker-dealer-regisration-number/carrier-broker-dealer-registration-number-error-tests.js'
 import {
   invalidCarrierRegistrationNumbers,

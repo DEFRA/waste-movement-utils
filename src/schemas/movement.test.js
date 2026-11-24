@@ -1,9 +1,9 @@
-import { MEANS_OF_TRANSPORT } from '../constants/means-of-transport.js'
-import { validPopNames } from '../constants/pop-names.js'
 import {
+  MEANS_OF_TRANSPORT,
+  validPopNames,
   sourceOfComponentsNotProvided,
   sourceOfComponentsProvided
-} from '../constants/source-of-components.js'
+} from '@defra/waste-movement-utils-reference-data'
 import { movementSchema } from './movement.js'
 import { randomUUID } from 'node:crypto'
 

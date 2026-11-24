@@ -1,5 +1,5 @@
 import Joi from 'joi'
-import { ALL_CARRIER_REGISTRATION_NUMBER_REGEXES } from '../constants/regexes.js'
+import { ALL_CARRIER_REGISTRATION_NUMBER_REGEXES } from '@defra/waste-movement-utils-reference-data'
 import { CARRIER_ERRORS } from '../constants/validation-error-messages.js'
 
 export const carrierOrBrokerDealerRegistrationNumber = Joi.alternatives()

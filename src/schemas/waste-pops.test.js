@@ -1,4 +1,7 @@
-import { isValidPopCode, validPopNames } from '../constants/pop-names.js'
+import {
+  isValidPopCode,
+  validPopNames
+} from '@defra/waste-movement-utils-reference-data'
 import { popsAndHazardousConcentrationOperatorTests } from '../test/common/pops-and-hazardous-components/pops-and-hazardous-concentration-operator-tests.js'
 import { popsAndHazardousComponentsErrorTests } from '../test/common/pops-and-hazardous-components/pops-and-hazardous-components-error-tests.js'
 import { receiveMovementRequestSchema } from './receipt.js'

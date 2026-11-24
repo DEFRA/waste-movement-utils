@@ -1,4 +1,4 @@
-import { validContainerTypes } from '../constants/container-types.js'
+import { validContainerTypes } from '@defra/waste-movement-utils-reference-data'
 import { receiveMovementRequestSchema } from './receipt.js'
 import { createTestPayload } from './test-helpers/waste-test-helpers.js'
 

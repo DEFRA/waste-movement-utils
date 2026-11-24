@@ -33,19 +33,16 @@ jobs:
           npm run lint
           npm test
 
-      - name: Get package version
-        id: package-version
-        run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
-
-      - name: Check if version exists on npm
-        id: check-version
+      # The packages publish before the umbrella at the root, which pins them,
+      # and the first failure stops the loop
+      - name: Publish each version that is not on npm
         run: |
-          if npm view @defra/waste-movement-utils@${{ steps.package-version.outputs.version }} version 2>/dev/null; then
-            echo "exists=true" >> $GITHUB_OUTPUT
-          else
-            echo "exists=false" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Publish to npm
-        if: steps.check-version.outputs.exists == 'false'
-        run: npm publish --access public
+          for folder in packages/reference-data packages/http-errors packages/service .; do
+            name=$(node -p "require('./$folder/package.json').name")
+            version=$(node -p "require('./$folder/package.json').version")
+            if npm view "$name@$version" version 2>/dev/null; then
+              echo "$name@$version is already on npm"
+            else
+              npm publish "./$folder" --access public
+            fi
+          done

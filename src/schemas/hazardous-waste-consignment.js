@@ -1,5 +1,5 @@
 import Joi from 'joi'
-import { isValidHazardousEwcCode } from '../constants/ewc-codes.js'
+import { isValidHazardousEwcCode } from '@defra/waste-movement-utils-reference-data'
 import { CONSIGNMENT_ERRORS } from '../constants/validation-error-messages.js'
 
 // Consignment note code formats, e.g.
