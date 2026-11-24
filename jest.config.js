@@ -15,7 +15,5 @@ export default {
   transform: {
     '^.+\\.(js|mjs)$': 'babel-jest'
   },
-  transformIgnorePatterns: [
-    `node_modules/(?!${['uuid', '@joi/date'].join('|')}/)`
-  ]
+  transformIgnorePatterns: [`node_modules/(?!${['uuid'].join('|')}/)`]
 }

@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'uuid'
+import { randomUUID } from 'node:crypto'
 import {
   sourceOfComponentsNotProvided,
   sourceOfComponentsProvided
@@ -8,7 +8,7 @@ import { TEST_DATA } from '../../schemas/test-constants.js'
 
 export function createMovementRequest(overrides) {
   const defaultMovementRequest = {
-    apiCode: uuidv4(),
+    apiCode: randomUUID(),
     dateTimeReceived: '2025-08-29T15:24:00.000Z',
     carrier: {
       registrationNumber: 'CBDU123456',
