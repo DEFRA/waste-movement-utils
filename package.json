@@ -1,6 +1,6 @@
 {
   "name": "@defra/waste-movement-utils",
-  "version": "1.24.0",
+  "version": "1.24.1",
   "description": "waste-movement-utils",
   "repository": {
     "url": "https://github.com/DEFRA/waste-movement-utils"
@@ -31,13 +31,12 @@
     "husky": "^9.1.7",
     "jest": "^30.4.2",
     "neostandard": "^0.14.0",
-    "prettier": "3.8.3"
+    "prettier": "3.8.3",
+    "uuid": "^14.0.0"
   },
   "dependencies": {
     "@hapi/basic": "^7.0.2",
-    "@joi/date": "^3.0.0",
-    "joi": "^18.2.9",
-    "uuid": "^14.0.0"
+    "joi": "^18.2.9"
   },
   "overrides": {
     "brace-expansion": "^5.0.8"
