@@ -1,9 +1,11 @@
 import Joi from 'joi'
 import { carrierOrBrokerDealerRegistrationNumber } from './carrierOrBrokerDealerRegistrationNumber.js'
-import { REASONS_FOR_NO_REGISTRATION_NUMBER } from '../constants/reasons-for-no-registration-number.js'
+import {
+  REASONS_FOR_NO_REGISTRATION_NUMBER,
+  MEANS_OF_TRANSPORT
+} from '@defra/waste-movement-utils-reference-data'
 import { CARRIER_ERRORS } from '../constants/validation-error-messages.js'
 import { addressSchema } from './address.js'
-import { MEANS_OF_TRANSPORT } from '../constants/means-of-transport.js'
 
 export const carrierSchema = Joi.object({
   registrationNumber: carrierOrBrokerDealerRegistrationNumber

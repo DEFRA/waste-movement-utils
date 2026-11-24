@@ -1,13 +1,4 @@
-export const ERROR_TYPE = {
-  NOT_PROVIDED: 'NotProvided',
-  NOT_ALLOWED: 'NotAllowed',
-  INVALID_TYPE: 'InvalidType',
-  INVALID_FORMAT: 'InvalidFormat',
-  INVALID_VALUE: 'InvalidValue',
-  OUT_OF_RANGE: 'OutOfRange',
-  BUSINESS_RULE_VIOLATION: 'BusinessRuleViolation',
-  UNEXPECTED_ERROR: 'UnexpectedError'
-}
+import { ERROR_TYPE } from '@defra/waste-movement-utils-http-errors'
 
 export const JOI_TYPE_TO_CATEGORY = {
   // NotProvided

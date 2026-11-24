@@ -1,5 +1,5 @@
-import { METRIC_NAMES } from '../constants/metric-names.js'
-import { SCOTLAND_EAS_SIX_DIGIT_SITE_AUTHORISATION_NUMBER_REGEX } from '../constants/regexes.js'
+import { METRIC_NAMES } from '@defra/waste-movement-utils-service'
+import { SCOTLAND_EAS_SIX_DIGIT_SITE_AUTHORISATION_NUMBER_REGEX } from '@defra/waste-movement-utils-reference-data'
 
 /**
  * Logs a receiver authorisation number of EAS/P with six digits, so OpenSearch

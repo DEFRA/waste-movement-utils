@@ -1,5 +1,5 @@
 // Test Constants
-import { validContainerTypes } from '../../constants/container-types.js'
+import { validContainerTypes } from '@defra/waste-movement-utils-reference-data'
 import { createMovementRequest as defaultCreateMovementRequest } from '../../test/utils/createMovementRequest.js'
 
 export const TEST_CONSTANTS = {

@@ -1,14 +1,14 @@
 import Joi from 'joi'
 import {
   UK_POSTCODE_REGEX,
-  ALL_SITE_AUTHORISATION_NUMBER_REGEXES
-} from '../constants/regexes.js'
+  ALL_SITE_AUTHORISATION_NUMBER_REGEXES,
+  NO_CONSIGNMENT_REASONS
+} from '@defra/waste-movement-utils-reference-data'
 import {
   ADDRESS_ERRORS,
   CONSIGNMENT_ERRORS,
   AUTHORISATION_ERRORS
 } from '../constants/validation-error-messages.js'
-import { NO_CONSIGNMENT_REASONS } from '../constants/no-consignment-reasons.js'
 import {
   hasHazardousEwcCodes,
   hazardousWasteConsignmentCodeSchema

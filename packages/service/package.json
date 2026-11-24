@@ -1,0 +1,21 @@
+{
+  "name": "@defra/waste-movement-utils-service",
+  "version": "1.0.0",
+  "description": "Service plumbing for the Waste Movement services: basic-auth plugin, env-var helper, backoff options, metric names and logging helpers",
+  "repository": {
+    "url": "https://github.com/DEFRA/waste-movement-utils"
+  },
+  "main": "src/index.js",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "Defra DDTS",
+  "license": "OGL-UK-3.0",
+  "dependencies": {
+    "@hapi/basic": "7.0.2"
+  }
+}

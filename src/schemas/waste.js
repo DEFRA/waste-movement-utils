@@ -1,18 +1,20 @@
 import Joi from 'joi'
-import { isValidEwcCode } from '../constants/ewc-codes.js'
-import { isValidPopCode } from '../constants/pop-names.js'
+import {
+  isValidEwcCode,
+  isValidPopCode,
+  isValidContainerType,
+  validHazCodes,
+  DISPOSAL_OR_RECOVERY_CODES,
+  validSourceOfComponents,
+  concentrationOperators
+} from '@defra/waste-movement-utils-reference-data'
 import { weightSchema } from './weight.js'
-import { isValidContainerType } from '../constants/container-types.js'
-import { validHazCodes } from '../constants/haz-codes.js'
-import { DISPOSAL_OR_RECOVERY_CODES } from '../constants/treatment-codes.js'
 import {
   HAZARDOUS_ERRORS,
   POPS_ERRORS,
   POPS_OR_HAZARDOUS_ERRORS,
   WASTE_ERRORS
 } from '../constants/validation-error-messages.js'
-import { validSourceOfComponents } from '../constants/source-of-components.js'
-import { concentrationOperators } from '../constants/concentration-operators.js'
 
 const MAX_EWC_CODES_COUNT = 5
 

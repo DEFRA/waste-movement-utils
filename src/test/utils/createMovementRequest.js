@@ -1,9 +1,9 @@
 import { randomUUID } from 'node:crypto'
 import {
   sourceOfComponentsNotProvided,
-  sourceOfComponentsProvided
-} from '../../constants/source-of-components.js'
-import { validPopNames } from '../../constants/pop-names.js'
+  sourceOfComponentsProvided,
+  validPopNames
+} from '@defra/waste-movement-utils-reference-data'
 import { TEST_DATA } from '../../schemas/test-constants.js'
 
 export function createMovementRequest(overrides) {

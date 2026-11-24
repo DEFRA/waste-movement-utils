@@ -1,5 +1,8 @@
 import Joi from 'joi'
-import { IRL_POSTCODE_REGEX, UK_POSTCODE_REGEX } from '../constants/regexes.js'
+import {
+  IRL_POSTCODE_REGEX,
+  UK_POSTCODE_REGEX
+} from '@defra/waste-movement-utils-reference-data'
 import { ADDRESS_ERRORS } from '../constants/validation-error-messages.js'
 
 export const addressSchema = Joi.object({

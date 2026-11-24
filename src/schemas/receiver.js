@@ -1,6 +1,6 @@
 import Joi from 'joi'
 import { AUTHORISATION_ERRORS } from '../constants/validation-error-messages.js'
-import { ALL_SITE_AUTHORISATION_NUMBER_REGEXES } from '../constants/regexes.js'
+import { ALL_SITE_AUTHORISATION_NUMBER_REGEXES } from '@defra/waste-movement-utils-reference-data'
 import { addressSchema } from './address.js'
 
 const isValidAuthorisationNumber = (authorisationNumber) => {

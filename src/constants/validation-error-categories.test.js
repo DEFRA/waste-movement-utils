@@ -1,6 +1,6 @@
+import { ERROR_TYPE } from '@defra/waste-movement-utils-http-errors'
 import {
   ERROR_CATEGORIES,
-  ERROR_TYPE,
   getErrorCategory,
   JOI_TYPE_TO_CATEGORY
 } from './validation-error-categories'

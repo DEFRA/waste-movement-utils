@@ -1,5 +1,7 @@
-import { REASONS_FOR_NO_REGISTRATION_NUMBER } from './reasons-for-no-registration-number.js'
-import { sourceOfComponentsProvided } from './source-of-components.js'
+import {
+  REASONS_FOR_NO_REGISTRATION_NUMBER,
+  sourceOfComponentsProvided
+} from '@defra/waste-movement-utils-reference-data'
 
 export const RECEIPT_WARNINGS = {
   IS_REQUIRED: '{{ #label }} is required'

@@ -1,4 +1,4 @@
-import { REASONS_FOR_NO_REGISTRATION_NUMBER } from '../../constants/reasons-for-no-registration-number.js'
+import { REASONS_FOR_NO_REGISTRATION_NUMBER } from '@defra/waste-movement-utils-reference-data'
 import { VALIDATION_WARNING_TYPES } from '../../constants/validation-warning-messages.js'
 import { processValidationWarnings } from '../validation-warnings.js'
 import { reasonForNoRegistrationNumberWarningValidators } from './reason-for-no-registration-number.js'
