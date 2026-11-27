@@ -54,3 +54,21 @@ jobs:
               process.exit(1);
             }
           "
+
+      # The publish job skips a version that is already on npm, so a change to
+      # the package under its old version would never be published
+      - name: Check reference data version incremented when the package changes
+        run: |
+          FOLDER=packages/reference-data
+          git cat-file -e "origin/main:$FOLDER/package.json" 2>/dev/null || exit 0
+          git diff --quiet origin/main -- "$FOLDER" && exit 0
+          PR_VERSION=$(node -p "require('./$FOLDER/package.json').version")
+          BASE_VERSION=$(git show "origin/main:$FOLDER/package.json" | node -p "JSON.parse(require('fs').readFileSync('/dev/stdin','utf8')).version")
+          node -e "
+            const [a, b] = ['$PR_VERSION', '$BASE_VERSION'].map(v => v.split('.').map(Number));
+            const isGreater = a[0] > b[0] || (a[0] === b[0] && a[1] > b[1]) || (a[0] === b[0] && a[1] === b[1] && a[2] > b[2]);
+            if (!isGreater) {
+              console.error('::error::Version in $FOLDER/package.json ($PR_VERSION) must be greater than the base branch version ($BASE_VERSION)');
+              process.exit(1);
+            }
+          "

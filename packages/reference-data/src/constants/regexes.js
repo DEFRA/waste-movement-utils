@@ -1,0 +1,86 @@
+// RegEx per Gov UK recommendation: https://assets.publishing.service.gov.uk/media/5a7f3ff4ed915d74e33f5438/Bulk_Data_Transfer_-_additional_validation_valid_from_12_November_2015.pdf
+export const UK_POSTCODE_REGEX =
+  /^((GIR 0A{2})|((([A-Z]\d{1,2})|(([A-Z][A-HJ-Y]\d{1,2})|(([A-Z]\d[A-Z])|([A-Z][A-HJ-Y]\d?[A-Z])))) \d[A-Z]{2}))$/i // NOSONAR
+
+// Ireland Eircode regex (routing key + unique identifier)
+// Reference: https://www.eircode.ie
+export const IRL_POSTCODE_REGEX =
+  /^(?:D6W|[AC-FHKNPRTV-Y]\d{2}) ?[0-9AC-FHKNPRTV-Y]{4}$/i
+
+/*
+ * Carrier Registration Numbers
+ * See src/test/data/carrier-registration-numbers.js for examples
+ */
+const ENGLAND_CARRIER_REGISTRATION_NUMBER_REGEXES = [/^CBD[LU]\d{3,}$/i]
+
+const SEPA_CARRIER_REGISTRATION_NUMBER_REGEXES = [
+  /^EAS\/R\/\d{6,7}$/i, // EAS/R/999999, EAS/R/9999999, issued under EASR since November 2025
+  /^WCR\/R\/\d{7}$/i, // WCR/R/9999999
+  /^WCR\/[A-Z0-9]{6}$/i, // WCR/ZZZZZZ, six letters or digits
+  /^(SCO|SEA|SNO|SWE)\/\d{6}(\/CB)?$/i, // SCO/999999 and SCO/999999/CB, likewise SEA, SNO and SWE
+  /^SCO\/\d{6}\/B$/i, // SCO/999999/B
+  /^PCT-[A-Z]-\d{3,7}$/i
+]
+
+const NRU_CARRIER_REGISTRATION_NUMBER_REGEXES =
+  ENGLAND_CARRIER_REGISTRATION_NUMBER_REGEXES
+
+const NI_CARRIER_REGISTRATION_NUMBER_REGEXES = [/^ROC\W*[UL]T\W*\d{1,5}$/i]
+
+// Combine all carrier registration number regexes for validation
+export const ALL_CARRIER_REGISTRATION_NUMBER_REGEXES = [
+  ...ENGLAND_CARRIER_REGISTRATION_NUMBER_REGEXES,
+  ...SEPA_CARRIER_REGISTRATION_NUMBER_REGEXES,
+  ...NRU_CARRIER_REGISTRATION_NUMBER_REGEXES,
+  ...NI_CARRIER_REGISTRATION_NUMBER_REGEXES
+]
+
+// England site authorisation number regexes
+const ENGLAND_SITE_AUTHORISATION_NUMBER_REGEXES = [
+  /^[A-Z]{2}\d{4}[A-Z]{2}$/i, // XX9999XX
+  /^[A-Z]{2}\d{4}[A-Z]{2}\/D\d{4,5}$/i, // XX9999XX/D9999, XX9999XX/D99999
+  /^EPR\/[A-Z]{2}\d{4}[A-Z]{2}$/i, // EPR/XX9999XX
+  /^EPR\/[A-Z]{2}\d{4}[A-Z]{2}\/D\d{4,5}$/i, // EPR/XX9999XX/D9999, EPR/XX9999XX/D99999
+  /^EAWML\d{5,6}$/i, // EAWML99999, EAWML999999
+  /^WML\d{5,6}$/i // WML99999, WML999999
+]
+
+// EAS/P/999999 is not a format SEPA issues: kept so nothing breaks until DWTC-346 removes it
+export const SCOTLAND_EAS_SIX_DIGIT_SITE_AUTHORISATION_NUMBER_REGEX =
+  /^EAS\/P\/\d{6}$/i
+
+// Scotland (SEPA) site authorisation number regexes
+const SCOTLAND_SITE_AUTHORISATION_NUMBER_REGEXES = [
+  /^PPC\/[AWEN]\/\d{7}$/i, // PPC/A/9999999
+  /^WML\/[LWEN]\/\d{7}$/i, // WML/L/9999999
+  /^WML\/[LWEN]\/\d{7}\/\d{2}$/i, // WML/L/9999999/99
+  /^PPC\/A\/SEPA\d{4}-\d{4}$/i, // PPC/A/SEPA9999-9999
+  /^WML\/L\/SEPA\d{4}-\d{4}$/i, // WML/L/SEPA9999-9999
+  /^EAS\/P\/\d{7}$/i, // EAS/P/9999999
+  SCOTLAND_EAS_SIX_DIGIT_SITE_AUTHORISATION_NUMBER_REGEX // EAS/P/999999
+]
+
+// Wales (NRW) site authorisation number regexes - shares regexes with England
+const WALES_SITE_AUTHORISATION_NUMBER_REGEXES = [
+  /^[A-Z]{2}\d{4}[A-Z]{2}$/i, // XX9999XX
+  /^EPR\/[A-Z]{2}\d{4}[A-Z]{2}$/i // EPR/XX9999XX
+]
+
+// Northern Ireland site authorisation number regexes
+const NI_SITE_AUTHORISATION_NUMBER_REGEXES = [
+  /^P\d{4}\/\d{2}[A-Z]$/i, // P9999/99X
+  /^P\d{4}\/\d{2}[A-Z]\/V\d+$/i, // P9999/99X/V# (with version)
+  /^WPPC \d{2}\/\d{2}$/i, // WPPC 99/99
+  /^WPPC \d{2}\/\d{2}\/V\d+$/i, // WPPC 99/99/V# (with version)
+  // WML, LN, and PAC formats are only valid when combined (see below)
+  /^WML \d{2}\/\d+(\/T)? LN\/\d{2}\/\d+(\/([MTCN]|V\d+))*$/i, // Combined WML + LN formats (suffixes optional)
+  /^WML \d{2}\/\d+ PAC\/\d{4}\/WCL\d{3}$/i // Combined WML + PAC formats
+]
+
+// Combine all site authorisation number regexes for validation
+export const ALL_SITE_AUTHORISATION_NUMBER_REGEXES = [
+  ...ENGLAND_SITE_AUTHORISATION_NUMBER_REGEXES,
+  ...SCOTLAND_SITE_AUTHORISATION_NUMBER_REGEXES,
+  ...WALES_SITE_AUTHORISATION_NUMBER_REGEXES,
+  ...NI_SITE_AUTHORISATION_NUMBER_REGEXES
+]
